@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* ================= PAGE ================= */
+.hygiene-page{
+    background:#f6f7fb;
+    min-height:100vh;
+    padding:25px;
+}
+
+/* ================= GRID ================= */
+.hygiene-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+/* ================= CARD ================= */
+.hygiene-card{
+    background:white;
+    border-radius:15px;
+    padding:12px;
+    transition:0.3s;
+    box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    display:flex;
+    flex-direction:column;
+    animation:fadeUp 0.5s ease;
+}
+
+.hygiene-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.12);
+}
+
+/* ================= IMAGE ================= */
+.hygiene-img{
+    width:100%;
+    height:170px;
+    object-fit:contain;
+    border-radius:10px;
+}
+
+/* ================= NAME ================= */
+.hygiene-name{
+    font-size:15px;
+    font-weight:600;
+    margin-top:8px;
+}
+
+/* ================= DESC ================= */
+.hygiene-desc{
+    font-size:12px;
+    color:#666;
+    margin-top:4px;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+}
+
+/* ================= PRICE ================= */
+.price{
+    font-weight:bold;
+    color:#0071dc;
+    margin-top:5px;
+}
+
+.old-price{
+    text-decoration:line-through;
+    color:#999;
+    font-size:12px;
+}
+
+/* ================= BADGE ================= */
+.badge{
+    background:#ff3b30;
+    color:white;
+    font-size:10px;
+    padding:3px 6px;
+    border-radius:6px;
+    position:absolute;
+}
+
+/* ================= BUTTON ================= */
+.btn-view{
+    margin-top:auto;
+    display:block;
+    text-align:center;
+    background:#0071dc;
+    color:white;
+    padding:6px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:13px;
+}
+
+/* ================= TITLE (COMME MODE.HTML) ================= */
+.hygiene-title{
+    text-align:center;
+    margin-bottom:25px;
+    animation:fadeDown 0.6s ease;
+}
+
+.tag-icon{
+    font-size:28px;
+    display:block;
+    margin-bottom:5px;
+}
+
+.tag-text{
+    display:block;
+    font-size:22px;
+    font-weight:700;
+    color:#111;
+}
+
+.tag-sub{
+    display:block;
+    font-size:13px;
+    color:#777;
+    margin-top:5px;
+}
+
+/* ================= ANIMATION ================= */
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeDown{
+    from{opacity:0; transform:translateY(-15px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:992px){
+    .hygiene-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:768px){
+    .hygiene-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:480px){
+    .hygiene-grid{grid-template-columns:repeat(1,1fr);}
+}
+
+/* ================= POPUP ================= */
+.login-popup{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    opacity:0;
+    visibility:hidden;
+    transition:0.3s;
+    z-index:99999;
+}
+
+.login-popup.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.login-box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    width:300px;
+}
+
+</style>
+
+<div class="hygiene-page">
+
+    <!-- ================= TITLE (COMME MODE.HTML) ================= -->
+    <h3 class="hygiene-title">
+
+        {% if current_type == "corps" %}
+            <span class="tag-icon"></span>
+            <span class="tag-text">Hygiène du Corps</span>
+            <small class="tag-sub">Soin, propreté & fraîcheur quotidienne</small>
+
+        {% elif current_type == "sante" %}
+            <span class="tag-icon"></span>
+            <span class="tag-text">Santé & Bien-être</span>
+            <small class="tag-sub">Protection et soins essentiels</small>
+
+        {% else %}
+            <span class="tag-icon"></span>
+            <span class="tag-text">Hygiène</span>
+            <small class="tag-sub">Produits essentiels pour votre quotidien</small>
+        {% endif %}
+
+    </h3>
+
+    <!-- ================= GRID ================= -->
+    <div class="hygiene-grid">
+
+        {% for p in products %}
+        <div class="hygiene-card">
+
+            {% if p.prix_promo %}
+                <span class="badge">Promo</span>
+            {% endif %}
+
+            <img src="{{ p.image.url }}" class="hygiene-img">
+
+            <div class="hygiene-name">{{ p.nom }}</div>
+
+            <div class="hygiene-desc">
+                {{ p.description }}
+            </div>
+
+            {% if p.prix_promo %}
+                <div class="price">{{ p.prix_promo }} CAD</div>
+                <div class="old-price">{{ p.prix }} CAD</div>
+            {% else %}
+                <div class="price">{{ p.prix }} CAD</div>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+    <a href="{% url 'add_hygiene_to_cart' p.id %}" class="btn-view">
+        🛒 Ajouter au panier
+    </a>
+{% else %}
+    <button type="button" onclick="showLoginMessage()" class="btn-view">
+        🔒 Ajouter au panier
+    </button>
+{% endif %}
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- ================= POPUP ================= -->
+<div id="login-popup" class="login-popup">
+    <div class="login-box">
+        <h5>🔒 Connexion requise</h5>
+        <p>Connectez-vous pour ajouter des produits au panier.</p>
+
+        <a href="{% url 'login' %}" class="btn btn-primary w-100">
+            Se connecter
+        </a>
+
+        <button onclick="closeLoginMessage()" class="btn btn-light w-100 mt-2">
+            Annuler
+        </button>
+    </div>
+</div>
+
+<script>
+function showLoginMessage(){
+    document.getElementById("login-popup").classList.add("active");
+}
+
+function closeLoginMessage(){
+    document.getElementById("login-popup").classList.remove("active");
+}
+</script>
+
+{% endblock %}

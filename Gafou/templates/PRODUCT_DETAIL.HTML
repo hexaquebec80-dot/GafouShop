@@ -1,0 +1,339 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+/* PAGE */
+.product-page {
+    background: #f7f4f3;
+    padding: 40px 0;
+}
+
+.product-img-box{
+    width:100%;
+    height:180px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid #eee;
+}
+
+/* IMAGE */
+.product-img{
+    width:100%;
+    height:100%;
+    object-fit:contain; /* Amazon style */
+    transition:0.2s ease;
+}
+
+/* HOVER SIMPLE (OPTIONNEL ET DISCRET) */
+.product-img-box:hover .product-img{
+    opacity:0.95;
+}
+
+/* TITLE */
+.product-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #111;
+}
+
+/* RATING */
+.product-rating {
+    font-size: 14px;
+    color: #777;
+}
+
+/* PRICE */
+.product-price {
+    color: #0d6efd;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.price-old {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 15px;
+}
+
+/* DESCRIPTION */
+.product-desc {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* BUTTONS */
+.btn-buy {
+    background: linear-gradient(45deg,#ff6a00,#ff8c00);
+    border: none;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.btn-buy:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg,#e85d00,#ff6a00);
+}
+
+.btn-outline-primary,
+.btn-outline-dark {
+    border-radius: 12px;
+}
+
+/* ADVANTAGES */
+.advantages {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    font-size: 14px;
+    color: #666;
+}
+
+/* SIMILAR */
+.similar-card {
+    background: white;
+    border-radius: 14px;
+    padding: 12px;
+    transition: 0.3s;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.similar-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.similar-img {
+    height: 120px;
+    object-fit: contain;
+}
+
+.similar-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #222;
+}
+
+.similar-price {
+    color: #0d6efd;
+    font-weight: bold;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .product-title {
+        font-size: 20px;
+    }
+
+    .product-price {
+        font-size: 22px;
+    }
+
+    .product-img {
+        max-height: 250px;
+    }
+}
+.product-image-box{
+    width:100%;
+    height:420px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.product-slider{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+
+.slide{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    position:absolute;
+    top:0;
+    left:0;
+    opacity:0;
+    transition:opacity 0.5s ease;
+}
+
+.slide.active{
+    opacity:1;
+}
+</style>
+
+<div class="product-page">
+
+<div class="container">
+
+  <div class="row g-5 align-items-center">
+
+   <!-- IMAGE / SLIDER -->
+<div class="col-md-6">
+  <div class="product-image-box">
+
+    <div class="product-slider" data-index="0">
+
+        {% if product.image %}
+            <img src="{{ product.image.url }}" class="slide active">
+        {% endif %}
+
+        {% if product.image2 %}
+            <img src="{{ product.image2.url }}" class="slide">
+        {% endif %}
+
+        {% if product.image3 %}
+            <img src="{{ product.image3.url }}" class="slide">
+        {% endif %}
+
+        {% if product.video %}
+            <video class="slide" muted autoplay loop playsinline>
+                <source src="{{ product.video.url }}" type="video/mp4">
+            </video>
+        {% endif %}
+
+        {% if not product.image and not product.image2 and not product.image3 and not product.video %}
+            <img src="{% static 'no-image.png' %}" class="slide active">
+        {% endif %}
+
+    </div>
+
+  </div>
+</div>
+
+    <!-- INFO -->
+    <div class="col-md-6">
+
+      <h2 class="product-title">{{ product.nom }}</h2>
+
+      <p class="product-rating">
+        ⭐⭐⭐⭐⭐ (4.8) • Stock : {{ product.stock }}
+      </p>
+
+      <!-- PRIX -->
+      {% if product.prix_promo and product.prix_promo < product.prix %}
+          <h3 class="product-price">{{ product.prix_promo }} CAD</h3>
+          <div class="price-old">{{ product.prix }} CAD</div>
+      {% else %}
+          <h3 class="product-price">{{ product.prix }} CAD</h3>
+      {% endif %}
+
+      <p class="product-desc mt-3">
+        {{ product.description }}
+      </p>
+
+      <!-- ACTIONS -->
+      <div class="d-grid gap-3 mt-4">
+
+        <a href="{% url 'checkout' %}" class="btn btn-buy text-white">
+          🛒 Acheter maintenant
+        </a>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline-primary">
+                ➕ Ajouter au panier
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-primary">
+                🔒 Connectez-vous pour acheter
+            </a>
+        {% endif %}
+
+        <button class="btn btn-outline-dark">
+          ❤️ Ajouter aux favoris
+        </button>
+
+      </div>
+
+      <!-- AVANTAGES -->
+      <div class="advantages mt-4">
+        ✔ Livraison rapide 24-48h <br>
+        ✔ Paiement sécurisé (Visa, PayPal) <br>
+        ✔ Retour gratuit 30 jours <br>
+        ✔ Support 24/7
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SIMILAIRES -->
+  <hr class="my-5">
+
+  <h4 class="mb-4">🔥 Produits similaires</h4>
+
+  <div class="row g-4">
+
+    {% for p in similar_products %}
+
+    <div class="col-6 col-md-2">
+
+      <div class="similar-card text-center">
+
+        <a href="{% url 'product_detail' p.id %}">
+            {% if p.image %}
+                <img src="{{ p.image.url }}" class="similar-img">
+            {% else %}
+                <img src="{% static 'no-image.png' %}" class="similar-img">
+            {% endif %}
+        </a>
+
+        <div class="mt-2 similar-title">
+          {{ p.nom|truncatechars:20 }}
+        </div>
+
+        <div class="similar-price">
+          {{ p.get_price }} CAD
+        </div>
+
+        <a href="{% url 'product_detail' p.id %}" class="btn btn-sm btn-primary mt-2 w-100">
+          Voir
+        </a>
+
+      </div>
+
+    </div>
+
+    {% empty %}
+        <p>Aucun produit similaire</p>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+</div>
+<script>
+document.querySelectorAll(".product-slider").forEach(slider => {
+
+    let slides = slider.querySelectorAll(".slide");
+    let index = 0;
+
+    if(slides.length === 0) return;
+
+    setInterval(() => {
+
+        slides[index].classList.remove("active");
+
+        index = (index + 1) % slides.length;
+
+        slides[index].classList.add("active");
+
+    }, 3000);
+
+});
+</script>
+{% endblock %}

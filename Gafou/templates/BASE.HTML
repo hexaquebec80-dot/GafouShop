@@ -1,0 +1,1360 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>GafouShop</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+body {
+    background: #f7f4f3;
+    font-family: Arial, sans-serif;
+    transition: opacity 0.4s ease;
+}
+
+/* =========================
+   TOP BAR / NAVBAR
+========================= */
+
+.top-bar {
+    background: #0071dc;
+    font-size: 13px;
+}
+
+.custom-navbar {
+    background: #f2edec;
+    border-bottom: 1px solid #e5dcd9;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+#navbar.scrolled {
+    background: rgba(242, 237, 236, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* LOGO */
+.logo-img {
+    height: 65px;
+    object-fit: contain;
+    transition: 0.2s;
+}
+
+.logo-img:hover {
+    transform: scale(1.06);
+}
+
+.brand-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0071dc;
+}
+
+/* SEARCH */
+.search-input {
+    border-radius: 25px;
+    padding-left: 15px;
+    border: 1px solid #ddd;
+}
+
+/* CART */
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #ff3b30;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* =========================
+   PRODUCT CARD (DESKTOP)
+========================= */
+
+.product-card,
+.product-item {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.product-card:hover,
+.product-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* IMAGE */
+.product-card img,
+.product-item img {
+    height: 160px;
+    width: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover img,
+.product-item:hover img {
+    transform: scale(1.05);
+}
+
+/* TITLE */
+.product-title {
+    font-size: 14px;
+    font-weight: 600;
+    height: 38px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+/* PRICE */
+.product-price,
+.price-new {
+    color: #0071dc;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+/* BUTTON */
+.btn-add {
+    display: block;
+    text-align: center;
+    background: #0071dc;
+    color: white;
+    border-radius: 25px;
+    padding: 8px;
+    font-size: 13px;
+    margin-top: 10px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-add:hover {
+    background: #005bb5;
+    transform: scale(1.03);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+    background: #111;
+    color: white;
+    margin-top: 60px;
+    padding: 50px 0;
+}
+
+.footer h5 {
+    color: #fff;
+}
+
+.footer a {
+    color: #ccc;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.footer a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    background: #0a0a0a;
+    text-align: center;
+    padding: 10px;
+    font-size: 13px;
+    color: #aaa;
+}
+
+/* =========================
+   MOBILE (AMAZON STYLE FIX)
+========================= */
+@media (max-width: 768px) {
+
+    /* LOGO */
+    .logo-img {
+        height: 45px;
+    }
+
+    .brand-text {
+        font-size: 18px;
+    }
+
+    .search-input {
+        font-size: 14px;
+    }
+
+    .mega-menu {
+        width: 100%;
+    }
+
+    /* =========================
+       GRID 3 COLONNES MOBILE
+    ========================= */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 🔥 3 cards */
+        gap: 6px; /* plus compact */
+        padding: 8px;
+    }
+
+    /* =========================
+       CARD FIX (TAILLE IDENTIQUE)
+    ========================= */
+    .product-card,
+    .product-item {
+        padding: 6px;
+        border-radius: 10px;
+
+        /* 🔥 IMPORTANT: force même hauteur visuelle */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        min-height: 260px;
+    }
+
+    /* IMAGE FIX */
+    .product-card img,
+    .product-item img {
+        height: 95px;
+        width: 100%;
+        object-fit: contain;
+    }
+
+    /* TITLE FIX (évite désalignement) */
+    .product-title {
+        font-size: 11px;
+        height: 28px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* PRICE */
+    .product-price,
+    .price-new {
+        font-size: 12px;
+    }
+
+    /* BUTTON ULTRA COMPACT */
+    .btn-add {
+        font-size: 10px;
+        padding: 5px;
+        border-radius: 20px;
+    }
+}
+/* BUTTON */
+.btn-category {
+    background: #111;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+}
+
+.btn-category:hover {
+    background: #333;
+}
+
+/* MEGA MENU */
+.mega-menu {
+    width: 700px;
+    border-radius: 12px;
+    padding: 20px;
+    border: none;
+    margin-top: 10px;
+}
+
+/* GRID */
+.mega-content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+/* COLUMN */
+.mega-col h6 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* LINKS */
+.mega-col a {
+    display: block;
+    font-size: 13px;
+    color: #555;
+    text-decoration: none;
+    margin-bottom: 6px;
+    transition: 0.2s;
+}
+
+.mega-col a:hover {
+    color: #0071dc;
+    transform: translateX(4px);
+}
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+    .mega-menu {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .mega-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+.auth-box {
+    border-radius: 15px;
+    padding: 25px;
+    animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    border: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+/* MODAL SIZE */
+.modal-sm-custom {
+    max-width: 380px;
+}
+
+/* MAIN BOX */
+.login-modern {
+    border-radius: 20px;
+    padding: 20px;
+    border: none;
+    background: white;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    animation: smoothZoom 0.3s ease;
+}
+
+/* ANIMATION */
+@keyframes smoothZoom {
+    from {
+        transform: scale(0.9) translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* CLOSE BUTTON */
+.custom-close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+/* TITLE */
+.login-title {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.login-subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+/* ERROR */
+.login-error {
+    color: red;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* INPUT STYLE MODERNE */
+.input-group-modern {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.input-group-modern input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group-modern input:focus {
+    border-color: #0071dc;
+    box-shadow: 0 0 0 3px rgba(0,113,220,0.1);
+}
+
+/* FLOAT LABEL */
+.input-group-modern label {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 13px;
+    color: #888;
+    transition: 0.3s;
+    background: white;
+    padding: 0 5px;
+}
+
+.input-group-modern input:focus + label,
+.input-group-modern input:valid + label {
+    top: -8px;
+    font-size: 11px;
+    color: #0071dc;
+}
+
+/* BUTTON */
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #0071dc, #00c6ff);
+    color: white;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,113,220,0.3);
+}
+
+/* FOOTER */
+.login-footer {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+.login-footer a {
+    color: #0071dc;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* FORGOT */
+.login-forgot {
+    text-align: center;
+    font-size: 12px;
+}
+
+.login-forgot a {
+    color: #888;
+    text-decoration: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+    .login-modern {
+        border-radius: 15px;
+        padding: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+{% if messages %}
+  <div class="container mt-2">
+
+    {% for message in messages %}
+
+      <div class="alert alert-success text-center shadow-sm">
+          {{ message }}
+      </div>
+
+    {% endfor %}
+
+  </div>
+
+  {% if messages %}
+  <div class="container mt-2">
+
+    {% for message in messages %}
+
+      <div class="alert alert-warning text-center shadow-sm">
+          {{ message }}
+      </div>
+
+    {% endfor %}
+
+  </div>
+{% endif %}
+{% endif %}
+<!-- TOP BAR -->
+<div class="top-bar text-white py-1">
+  <div class="container d-flex justify-content-between small">
+    <div>🚚 Livraison rapide | 🔒 Paiement sécurisé</div>
+    <div>🇫🇷 France | 🌍 International</div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar" class="navbar navbar-expand-lg custom-navbar sticky-top">
+
+  <div class="container">
+
+    <!-- LOGO -->
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <img src="{% static 'images/Gafoulog.png' %}" class="logo-img">
+      <span class="brand-text ms-2">GafouShop</span>
+    </a>
+
+    <!-- CATEGORIES -->
+    <div class="dropdown mx-3">
+      <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown">
+        ☰ Catégories
+      </button>
+
+      <div class="dropdown-menu mega-menu p-3 shadow">
+
+        <div class="row">
+
+       
+
+         <div class="col-md-3 footer-col">
+    <h6 class="footer-title" >Mode</h6>
+
+    <a href="{% url 'mode_type' 'homme' %} " class="footer-link">Hommes</a>
+    <a href="{% url 'mode_type' 'femme' %}" class="footer-link">Femmes</a>
+    <a href="{% url 'mode_type' 'enfant' %}"  class="footer-link">Enfants</a>
+</div>
+        <div class="col-md-3 footer-col">
+    <h6 class="footer-title"> Beauté & Bien-être</h6>
+
+    <a href="{% url 'beaute_type' 'cosmetique' %}" class="footer-link">
+         Cosmétiques
+    </a>
+
+    <a href="{% url 'beaute_type' 'soin' %}" class="footer-link">
+         Soins
+    </a>
+</div>
+
+<style>
+.footer-title{
+    font-weight:700;
+    margin-bottom:10px;
+    color:#111;
+    font-size:14px;
+}
+
+.footer-link{
+    display:block;
+    color:#555;
+    font-size:13px;
+    margin-bottom:6px;
+    text-decoration:none;
+    transition:0.3s;
+}
+
+.footer-link:hover{
+    color:#0071dc;
+    transform:translateX(5px);
+}
+</style>
+
+<div class="col-md-3 footer-col">
+    <h6 class="footer-title">Hygiène</h6>
+
+    <a href="{% url 'hygiene_type' 'corps' %}" class="footer-link">
+        Corps
+    </a>
+
+    <a href="{% url 'hygiene_type' 'sante' %}" class="footer-link">
+        Santé
+    </a>
+</div>
+
+        </div>
+
+      </div>
+    </div>
+
+<!-- SEARCH -->
+<form method="GET" action="{% url 'search' %}" class="d-flex flex-grow-1 mx-3">
+
+  <input 
+    type="text"
+    name="q"
+    class="form-control search-input" 
+    placeholder="Rechercher produit..."
+    value="{{ request.GET.q }}"
+  >
+
+  <button class="btn btn-warning ms-2">
+    <i class="fa fa-search"></i>
+  </button>
+
+</form>
+
+
+
+<!-- ICONS -->
+<div class="d-flex align-items-center gap-3 text-center">
+
+    {% if user.is_authenticated and not user.is_staff %}
+
+        <div>
+
+            <!-- ICON USER -->
+            <a href="#" class="text-dark">
+                <i class="fa fa-user fa-lg"></i>
+            </a>
+
+            <!-- BONJOUR USER -->
+            <div style="font-size:12px; margin-top:2px; color:#333;">
+                Bonjour {{ user.username }}
+            </div>
+
+            <!-- LOGOUT -->
+            <div style="font-size:11px; margin-top:2px;">
+                <a href="{% url 'logout' %}" style="color:red; text-decoration:none;">
+                    Déconnexion
+                </a>
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <!-- CONNEXION CLIENT -->
+        <div>
+
+            <a href="{% url 'login' %}" class="text-dark">
+                <i class="fa fa-user fa-lg"></i>
+            </a>
+
+            <div style="font-size:11px; margin-top:2px;">
+                <a href="{% url 'login' %}" style="text-decoration:none;">
+                    Connexion
+                </a>
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+  <!-- CART ICON -->
+  <a href="{% url 'cart' %}" class="position-relative cart-icon text-dark">
+
+      <i class="fa fa-shopping-cart fa-lg"></i>
+
+      <span class="cart-badge">
+          {{ cart_count|default:0 }}
+      </span>
+
+  </a>
+
+</div>
+  </div>
+
+</nav>
+
+<!-- CONTENT -->
+<div class="container mt-4">
+{% block content %}{% endblock %}
+</div>
+<!-- LOGIN MODAL -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+
+    <div class="modal-content login-modern">
+
+      <div class="modal-body position-relative">
+
+        <!-- CLOSE -->
+        <button type="button" class="btn-close position-absolute top-0 end-0 m-3"
+                data-bs-dismiss="modal"></button>
+
+        <!-- TITLE -->
+        <h4 class="text-center mt-3">Bienvenue 👋</h4>
+        <p class="text-center text-muted">Connecte-toi à ton compte</p>
+
+        {% if login_error %}
+    <div class="alert alert-danger text-center py-2 small">
+        {{ login_error }}
+    </div>
+{% endif %}
+
+        <!-- FORM -->
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <input class="form-control mb-3"
+                   type="text"
+                   name="username"
+                   placeholder="Nom d'utilisateur"
+                   required>
+
+            <input class="form-control mb-3"
+                   type="password"
+                   name="password"
+                   placeholder="Mot de passe"
+                   required>
+
+            <button class="btn btn-primary w-100">
+                Se connecter
+            </button>
+        </form>
+
+        <!-- OPTIONS -->
+        <div class="text-center mt-3">
+
+            <a href="{% url 'register' %}" class="d-block mb-2">
+                Créer un compte
+            </a>
+
+            <a href="#" class="text-muted small">
+                Mot de passe oublié ?
+            </a>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+{% if login_error %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    loginModal.show();
+});
+</script>
+{% endif %}
+<footer class="footer">
+
+<style>
+
+/* =========================
+   MODERN FOOTER UI UX
+========================= */
+
+.footer{
+    position:relative;
+    background:linear-gradient(180deg,#0b1220 0%,#111827 100%);
+    color:#fff;
+    padding:80px 20px 25px;
+    margin-top:80px;
+    overflow:hidden;
+}
+
+/* BACKGROUND EFFECT */
+
+.footer::before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:rgba(0,168,255,0.08);
+    border-radius:50%;
+    top:-250px;
+    right:-180px;
+    filter:blur(80px);
+}
+
+.footer::after{
+    content:"";
+    position:absolute;
+    width:400px;
+    height:400px;
+    background:rgba(0,113,220,0.08);
+    border-radius:50%;
+    bottom:-200px;
+    left:-150px;
+    filter:blur(90px);
+}
+
+/* CONTAINER */
+
+.footer .container{
+    max-width:1250px;
+    margin:auto;
+    position:relative;
+    z-index:2;
+}
+
+/* GRID */
+
+.footer .row{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1.3fr;
+    gap:35px;
+}
+
+/* BRAND */
+
+.footer-brand{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:24px;
+    padding:30px;
+    backdrop-filter:blur(12px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+.footer-logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.footer-logo img{
+    width:60px;
+    height:60px;
+    object-fit:contain;
+    border-radius:16px;
+    background:white;
+    padding:6px;
+}
+
+.footer-logo h2{
+    margin:0;
+    font-size:28px;
+    font-weight:700;
+    background:linear-gradient(90deg,#00a8ff,#4cc9ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.footer-brand p{
+    color:#cfd6e4;
+    line-height:1.8;
+    font-size:14px;
+}
+
+/* TITLES */
+
+.footer h5{
+    font-size:17px;
+    margin-bottom:20px;
+    font-weight:700;
+    position:relative;
+}
+
+.footer h5::after{
+    content:"";
+    width:45px;
+    height:3px;
+    border-radius:10px;
+    background:#00a8ff;
+    position:absolute;
+    bottom:-8px;
+    left:0;
+}
+
+/* LINKS */
+
+.footer-links a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#c7c7c7;
+    text-decoration:none;
+    margin-bottom:14px;
+    transition:0.3s ease;
+    font-size:14px;
+}
+
+.footer-links a i{
+    color:#00a8ff;
+    font-size:13px;
+}
+
+.footer-links a:hover{
+    color:#fff;
+    transform:translateX(6px);
+}
+
+/* CONTACT */
+
+.footer-info{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:18px;
+    color:#d8d8d8;
+    font-size:14px;
+    transition:0.3s ease;
+}
+
+.footer-info i{
+    width:42px;
+    height:42px;
+    min-width:42px;
+    border-radius:14px;
+    background:rgba(0,168,255,0.12);
+    color:#00bfff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    transition:0.3s;
+}
+
+.footer-info:hover{
+    transform:translateX(5px);
+    color:#fff;
+}
+
+.footer-info:hover i{
+    background:#00a8ff;
+    color:#fff;
+    transform:scale(1.08);
+}
+
+/* PAYMENTS */
+
+.payment-box{
+    margin-top:25px;
+}
+
+.payment-title{
+    font-size:13px;
+    color:#aaa;
+    margin-bottom:12px;
+}
+
+.payment-icons{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.payment-icons img{
+    width:70px;
+    height:42px;
+    object-fit:contain;
+    background:white;
+    padding:8px;
+    border-radius:12px;
+    transition:0.3s;
+}
+
+.payment-icons img:hover{
+    transform:translateY(-4px);
+}
+
+/* HEXA SECTION */
+
+.hexa-section{
+    margin-top:55px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:24px;
+    padding:35px 25px;
+    text-align:center;
+    backdrop-filter:blur(10px);
+}
+
+.hexa-logo{
+    width:90px;
+    margin-bottom:14px;
+    filter:drop-shadow(0 5px 15px rgba(0,0,0,0.25));
+}
+
+.hexa-text-main{
+    font-size:17px;
+    margin-bottom:8px;
+    color:#fff;
+}
+
+.hexa-text-main strong{
+    color:#00a8ff;
+}
+
+.hexa-text-sub{
+    color:#b9c1d0;
+    font-size:14px;
+    margin-bottom:18px;
+}
+
+.hexa-link{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 24px;
+    border-radius:14px;
+    background:linear-gradient(90deg,#0071dc,#00a8ff);
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.3s ease;
+    box-shadow:0 10px 25px rgba(0,113,220,0.3);
+}
+
+.hexa-link:hover{
+    transform:translateY(-3px) scale(1.03);
+    color:white;
+}
+
+/* COPYRIGHT */
+
+.footer-bottom{
+    margin-top:40px;
+    padding-top:22px;
+    border-top:1px solid rgba(255,255,255,0.08);
+    text-align:center;
+    font-size:13px;
+    color:#9ca3af;
+}
+
+/* REVEAL ANIMATION */
+
+.reveal{
+    opacity:0;
+    transform:translateY(35px);
+    transition:all 0.8s ease;
+}
+
+.reveal.active{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+    .footer .row{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .footer{
+        padding:60px 18px 25px;
+    }
+
+    .footer .row{
+        grid-template-columns:1fr;
+    }
+
+    .footer-brand{
+        padding:25px;
+    }
+
+    .footer-logo{
+        justify-content:center;
+        text-align:center;
+        flex-direction:column;
+    }
+
+    .footer h5{
+        margin-top:10px;
+    }
+
+    .footer h5::after{
+        left:0;
+    }
+
+}
+
+</style>
+
+<div class="container">
+
+    <div class="row">
+
+        <!-- BRAND -->
+        <div class="footer-brand reveal">
+
+            <div class="footer-logo">
+
+                <img src="{% static 'images/Gafoulog.png' %}">
+
+                <h2>GafouShop</h2>
+
+            </div>
+
+            <p>
+                Découvrez une expérience shopping moderne avec GafouShop.
+                Produits beauté, mode, hygiène et accessoires sélectionnés
+                avec qualité premium et livraison rapide partout au Canada
+                et à l’international.
+            </p>
+
+            <div class="payment-box">
+
+                <div class="payment-title">
+                    Paiements sécurisés
+                </div>
+
+                <div class="payment-icons">
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg">
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg">
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PRODUCTS -->
+        <div class="footer-links reveal">
+
+            <h5>Produits</h5>
+
+            <a href="#">
+                <i class="fa-solid fa-angle-right"></i>
+                Cosmétiques
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-angle-right"></i>
+                Soins peau
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-angle-right"></i>
+                Hygiène
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-angle-right"></i>
+                Mode
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-angle-right"></i>
+                Nouveautés
+            </a>
+
+        </div>
+
+        <!-- SERVICES -->
+        <div class="footer-links reveal">
+
+            <h5>Services</h5>
+
+            <a href="#">
+                <i class="fa-solid fa-truck-fast"></i>
+                Livraison rapide
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-lock"></i>
+                Paiement sécurisé
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-headset"></i>
+                Support 24/7
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-rotate-left"></i>
+                Retours faciles
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-shield-halved"></i>
+                Protection client
+            </a>
+
+        </div>
+
+        <!-- CONTACT -->
+        <div class="reveal">
+
+            <h5>Contact</h5>
+
+            <div class="footer-info">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                <div>
+                    gafoushop84@gmail.com
+                </div>
+
+            </div>
+
+            <div class="footer-info">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                <div>
+                    France / International
+                </div>
+
+            </div>
+
+            <div class="footer-info">
+
+                <i class="fa-solid fa-phone"></i>
+
+                <div>
+                    +33 6 08 64 76 54
+                </div>
+
+            </div>
+
+            <div class="footer-info">
+
+                <i class="fa-solid fa-clock"></i>
+
+                <div>
+                    Support disponible 24h/24
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- HEXA -->
+    <div class="hexa-section reveal">
+
+        <img src="{% static 'images/logohexa.png' %}" class="hexa-logo">
+
+        <p class="hexa-text-main">
+            Site développé par <strong>HexaQuebec</strong> 🇨🇦
+        </p>
+
+        <p class="hexa-text-sub">
+            Développement web, mobile et intégration IA professionnelle
+        </p>
+
+        <a href="https://hexaquebec.com" target="_blank" class="hexa-link">
+
+            Visiter HexaQuebec
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+    <!-- COPYRIGHT -->
+    <div class="footer-bottom">
+
+        © 2026 GafouShop — Tous droits réservés
+
+    </div>
+
+</div>
+
+</footer>
+
+<script>
+
+/* REVEAL ANIMATION */
+
+function revealElements(){
+
+    const reveals = document.querySelectorAll('.reveal');
+
+    reveals.forEach((element)=>{
+
+        const windowHeight = window.innerHeight;
+
+        const elementTop = element.getBoundingClientRect().top;
+
+        const revealPoint = 100;
+
+        if(elementTop < windowHeight - revealPoint){
+
+            element.classList.add('active');
+
+        }
+
+    });
+
+}
+
+window.addEventListener('scroll', revealElements);
+
+revealElements();
+
+</script>
+
+<script>
+window.addEventListener("scroll", function () {
+    let nav = document.getElementById("navbar");
+    if (window.scrollY > 50) {
+        nav.classList.add("scrolled");
+    } else {
+        nav.classList.remove("scrolled");
+    }
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function showLoginMessage(){
+    document.getElementById("login-popup").classList.add("active");
+}
+
+function closeLoginMessage(){
+    document.getElementById("login-popup").classList.remove("active");
+}
+</script>
+<script>
+function revealOnScroll(){
+    const elements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+
+    const windowHeight = window.innerHeight;
+
+    elements.forEach(el => {
+        const top = el.getBoundingClientRect().top;
+
+        if(top < windowHeight - 100){
+            el.classList.add('active');
+        }
+    });
+}
+
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', revealOnScroll);
+</script>
+</body>
+</html>

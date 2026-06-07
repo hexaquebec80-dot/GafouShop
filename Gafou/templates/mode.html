@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* PAGE */
+.mode-page{
+    background:#f6f7fb;
+    min-height:100vh;
+    padding:25px;
+}
+
+/* TITLE */
+.mode-title{
+    font-weight:700;
+    margin-bottom:20px;
+    color:#111;
+    animation:fadeDown 0.5s ease;
+}
+
+/* GRID */
+.mode-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+/* CARD */
+.mode-card{
+    background:white;
+    border-radius:15px;
+    padding:12px;
+    transition:0.3s;
+    box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    animation:fadeUp 0.5s ease;
+}
+
+.mode-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.12);
+}
+
+/* IMAGE */
+.mode-img{
+    width:100%;
+    height:170px;
+    object-fit:contain;
+    border-radius:10px;
+}
+
+/* TITLE */
+.mode-name{
+    font-size:15px;
+    font-weight:600;
+    margin-top:8px;
+}
+
+/* DESCRIPTION */
+.mode-desc{
+    font-size:12px;
+    color:#666;
+    margin-top:4px;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+}
+
+/* PRICE */
+.price{
+    font-weight:bold;
+    color:#0071dc;
+    margin-top:5px;
+}
+
+.old-price{
+    text-decoration:line-through;
+    color:#999;
+    font-size:12px;
+}
+
+/* BADGE */
+.badge{
+    background:red;
+    color:white;
+    font-size:10px;
+    padding:3px 6px;
+    border-radius:6px;
+    position:absolute;
+}
+
+/* BUTTON */
+.btn-view{
+    display:block;
+    text-align:center;
+    background:#0071dc;
+    color:white;
+    padding:6px;
+    border-radius:10px;
+    margin-top:8px;
+    text-decoration:none;
+    font-size:13px;
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeDown{
+    from{opacity:0; transform:translateY(-10px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+/* RESPONSIVE */
+@media(max-width:992px){
+    .mode-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:768px){
+    .mode-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:480px){
+    .mode-grid{grid-template-columns:repeat(1,1fr);}
+}
+
+/* POPUP */
+.login-popup{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: 0.3s;
+    z-index: 99999;
+}
+
+.login-popup.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.login-box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    width:300px;
+    animation:fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+    from{transform:translateY(20px);opacity:0;}
+    to{transform:translateY(0);opacity:1;}
+}
+
+</style>
+
+<div class="mode-page">
+
+    <!-- TITLE -->
+   <h3 class="mode-title">
+
+    {% if current_type == "homme" %}
+        <span class="tag-icon">👔</span>
+        <span class="tag-text">Collection Hommes</span>
+        <small class="tag-sub">Style, élégance & tendance masculine</small>
+
+    {% elif current_type == "femme" %}
+        <span class="tag-icon">👗</span>
+        <span class="tag-text">Collection Femmes</span>
+        <small class="tag-sub">Beauté, élégance & mode moderne</small>
+
+    {% elif current_type == "enfant" %}
+        <span class="tag-icon">🧒</span>
+        <span class="tag-text">Collection Enfants</span>
+        <small class="tag-sub">Confort, douceur & fun</small>
+
+    {% else %}
+        <span class="tag-icon">🛍️</span>
+        <span class="tag-text">Toutes les collections</span>
+        <small class="tag-sub">Découvrez nos meilleurs produits</small>
+    {% endif %}
+
+</h3>
+<style>
+
+.mode-title{
+    text-align:center;
+    margin-bottom:25px;
+    animation:fadeDown 0.6s ease;
+}
+
+.tag-icon{
+    font-size:28px;
+    display:block;
+    margin-bottom:5px;
+}
+
+.tag-text{
+    display:block;
+    font-size:22px;
+    font-weight:700;
+    color:#111;
+    letter-spacing:0.5px;
+}
+
+.tag-sub{
+    display:block;
+    font-size:13px;
+    color:#777;
+    margin-top:5px;
+}
+
+/* ANIMATION */
+@keyframes fadeDown{
+    from{
+        opacity:0;
+        transform:translateY(-15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+</style>
+    <!-- GRID -->
+    <div class="mode-grid">
+
+        {% for p in products %}
+        <div class="mode-card">
+
+            {% if p.prix_promo %}
+                <span class="badge">Promo</span>
+            {% endif %}
+
+            <img src="{{ p.image.url }}" class="mode-img">
+
+            <div class="mode-name">{{ p.nom }}</div>
+
+            <div class="mode-desc">
+                {{ p.description }}
+            </div>
+
+            {% if p.prix_promo %}
+                <div class="price">{{ p.prix_promo }} CAD</div>
+                <div class="old-price">{{ p.prix }} CAD</div>
+            {% else %}
+                <div class="price">{{ p.prix }} CAD</div>
+            {% endif %}
+
+            <!-- BUTTON -->
+            {% if user.is_authenticated %}
+    <a href="{% url 'add_mode_to_cart' p.id %}" class="btn-view">
+        🛒 Ajouter au panier
+    </a>
+{% else %}
+    <button type="button" onclick="showLoginMessage()" class="btn-view">
+        🔒 Ajouter au panier
+    </button>
+{% endif %}
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- POPUP (IMPORTANT: UNE SEULE FOIS HORS LOOP) -->
+<div id="login-popup" class="login-popup">
+    <div class="login-box">
+        <h5>🔒 Connexion requise</h5>
+        <p>Connectez-vous pour magasiner et ajouter des produits à votre panier.</p>
+
+        <a href="{% url 'login' %}" class="btn btn-primary w-100">
+            Se connecter
+        </a>
+
+        <button onclick="closeLoginMessage()" class="btn btn-light w-100 mt-2">
+            Annuler
+        </button>
+    </div>
+</div>
+
+<!-- JS -->
+<script>
+function showLoginMessage(){
+    document.getElementById("login-popup").classList.add("active");
+}
+
+function closeLoginMessage(){
+    document.getElementById("login-popup").classList.remove("active");
+}
+</script>
+
+{% endblock %}

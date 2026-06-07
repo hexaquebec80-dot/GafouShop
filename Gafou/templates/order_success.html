@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Commande envoyée</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+    background:#f4f6f9;
+    font-family:Arial,sans-serif;
+}
+
+.success-box{
+    max-width:700px;
+    margin:80px auto;
+    background:white;
+    padding:50px;
+    border-radius:25px;
+    text-align:center;
+    box-shadow:0 5px 25px rgba(0,0,0,0.08);
+}
+
+.title{
+    font-size:38px;
+    font-weight:bold;
+    color:#0071dc;
+    margin-bottom:20px;
+}
+
+.text{
+    font-size:18px;
+    color:#555;
+    margin-bottom:30px;
+}
+
+.btn-pay{
+    display:inline-block;
+    padding:18px 35px;
+    border-radius:15px;
+    background:#0071dc;
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+    margin:10px;
+}
+
+.btn-pay:hover{
+    background:#005bb5;
+    color:white;
+}
+
+.btn-later{
+    display:inline-block;
+    padding:18px 35px;
+    border-radius:15px;
+    background:#e5e7eb;
+    color:#111;
+    text-decoration:none;
+    font-weight:bold;
+    margin:10px;
+}
+.payment-box{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.payment-box h3{
+    margin-bottom:20px;
+    font-weight:700;
+}
+
+.payment-method{
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    border:2px solid #0070ba;
+    border-radius:14px;
+
+    padding:15px;
+    margin-bottom:20px;
+
+    background:#f8fbff;
+}
+
+.paypal-logo{
+    width:55px;
+}
+
+.payment-method p{
+    margin:0;
+    font-size:13px;
+    color:#666;
+}
+
+.btn-paypal{
+    display:block;
+    width:100%;
+    text-align:center;
+
+    background:linear-gradient(135deg,#0070ba,#003087);
+
+    color:white;
+    padding:14px;
+
+    border-radius:14px;
+    text-decoration:none;
+
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.btn-paypal:hover{
+    transform:translateY(-2px);
+    color:white;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="success-box">
+
+    <div class="title">
+        ✅ Commande envoyée
+    </div>
+
+    <div class="text">
+
+        Votre commande a été enregistrée avec succès.
+
+        <br><br>
+
+        Vous pouvez payer maintenant avec PayPal
+        ou payer plus tard.
+
+    </div>
+
+ <div class="payment-box">
+
+    <h3>Mode de paiement</h3>
+
+    <div class="payment-method active">
+
+        <img 
+            src="https://www.paypalobjects.com/webstatic/icon/pp258.png"
+            class="paypal-logo"
+        >
+
+        <div>
+            <strong>PayPal</strong>
+            <p>Paiement sécurisé par PayPal</p>
+        </div>
+
+    </div>
+
+    <a href="{% url 'paypal_verify' %}" class="btn-paypal">
+        💳 Payer avec PayPal
+    </a>
+
+</div>
+
+    <a href="{% url 'home' %}" class="btn-later">
+        ⏳ Payer plus tard
+    </a>
+
+</div>
+
+</body>
+</html>

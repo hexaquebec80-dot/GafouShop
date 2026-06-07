@@ -1,0 +1,701 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* ================= GRID ================= */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+/* ================= CARD ================= */
+.product-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 320px;
+    transition: 0.3s;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* ================= IMAGE ================= */
+.product-img-box{
+    width:100%;
+    height:180px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    border-radius:10px;
+    background:#fff;
+}
+
+.product-slider{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+
+.slide{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    position:absolute;
+    top:0;
+    left:0;
+    opacity:0;
+    transition:opacity 0.5s ease;
+}
+
+.slide.active{
+    opacity:1;
+}
+
+/* ================= TITLE ================= */
+.product-title {
+    font-size: 14px;
+    font-weight: 600;
+    height: 36px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+/* ================= PRICE ================= */
+.price-box {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.price-new {
+    color: #d9230f;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.price-old {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 12px;
+}
+
+/* ================= PROMO BADGE ================= */
+.badge-promo {
+    position: absolute;
+    background: #d9230f;
+    color: white;
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+/* ================= DESCRIPTION ================= */
+.product-desc {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+/* ================= BUTTON ================= */
+.btn-add {
+    margin-top: auto;
+    display: block;
+    text-align: center;
+
+    background: #0071dc;
+    color: white;
+
+    border-radius: 20px;
+    padding: 6px 10px;
+    font-size: 12px;
+
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    background: #005bb5;
+}
+
+/* ================= EMPTY ================= */
+.empty-text {
+    text-align: center;
+    font-size: 18px;
+    color: #777;
+    padding: 40px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 992px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .product-item {
+        min-height: 240px;
+        padding: 6px;
+    }
+
+    .product-img-box {
+        height: 90px;
+    }
+
+    .product-title {
+        font-size: 11px;
+        height: 28px;
+    }
+
+    .product-desc {
+        display: none;
+    }
+
+    .price-new {
+        font-size: 12px;
+    }
+
+    .btn-add {
+        font-size: 10px;
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ================= POPUP LOGIN ================= */
+.login-popup{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    opacity:0;
+    visibility:hidden;
+    transition:0.3s;
+    z-index:9999;
+}
+
+.login-popup.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.login-box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    width:300px;
+    animation:fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        transform:translateY(20px);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+}
+.login-popup{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    opacity:0;
+    visibility:hidden;
+    transition:0.3s;
+}
+
+.login-popup.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.login-box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    width:320px;
+    animation:fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+    from{transform:translateY(20px);opacity:0;}
+    to{transform:translateY(0);opacity:1;}
+}
+
+
+/* ================= GRID ================= */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+/* ================= CARD ================= */
+.product-item {
+    background: #fff;
+    border-radius: 14px;
+    padding: 12px;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    min-height: 340px;
+    transition: 0.3s;
+    position: relative;
+}
+
+.product-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.10);
+}
+
+/* ================= IMAGE ================= */
+.product-img-box {
+    width: 100%;
+    height: 170px;
+    display: block;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ================= TITLE ================= */
+.product-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+    color: #111;
+    line-height: 1.3;
+    max-height: 38px;
+    overflow: hidden;
+}
+
+/* ================= PRICE ================= */
+.price-box {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.price-new {
+    color: #d9230f;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.price-old {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 12px;
+}
+
+/* ================= DESCRIPTION ================= */
+.product-desc {
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+    line-height: 1.4;
+
+    /* 👇 IMPORTANT: contrôle propre */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ================= BUTTON ================= */
+.btn-add {
+    margin-top: auto;
+    display: block;
+    text-align: center;
+    background: #0071dc;
+    color: white;
+    border-radius: 20px;
+    padding: 8px;
+    font-size: 12px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-add:hover {
+    background: #005bb5;
+}
+
+/* ================= BADGE ================= */
+.badge-promo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #d9230f;
+    color: white;
+    font-size: 10px;
+    padding: 4px 6px;
+    border-radius: 6px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* TABLET */
+@media (max-width: 992px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .product-item {
+        min-height: 280px;
+        padding: 8px;
+    }
+
+    .product-img-box {
+        height: 120px;
+    }
+
+    .product-title {
+        font-size: 12px;
+    }
+
+    .product-desc {
+        font-size: 11px;
+        -webkit-line-clamp: 2; /* 👈 plus court sur mobile */
+    }
+
+    .price-new {
+        font-size: 13px;
+    }
+
+    .btn-add {
+        font-size: 11px;
+        padding: 6px;
+    }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+.video-badge{
+    position:absolute;
+    top:6px;
+    left:6px;
+    background:#000;
+    color:#fff;
+    font-size:11px;
+    padding:3px 6px;
+    border-radius:5px;
+}
+.product-img-box{
+    width:100%;
+    height:180px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    border-radius:10px;
+    background:#fff;
+}
+
+.product-slider{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+
+.slide{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    position:absolute;
+    top:0;
+    left:0;
+    opacity:0;
+    transition:opacity 0.5s ease;
+}
+
+.slide.active{
+    opacity:1;
+}
+.welcome-popup{
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.6);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:999999;
+
+    opacity:1;
+    visibility:visible;
+}
+
+.welcome-box{
+    background: linear-gradient(135deg, #0071dc, #00c6ff);
+    color:white;
+    padding:25px;
+    border-radius:18px;
+    width:90%;
+    max-width:420px;
+    text-align:center;
+    position:relative;
+
+    animation: popIn 0.4s ease;
+}
+
+@keyframes popIn{
+    from{
+        transform: scale(0.8);
+        opacity:0;
+    }
+    to{
+        transform: scale(1);
+        opacity:1;
+    }
+}
+
+/* CLOSE BUTTON */
+.close-btn{
+    position:absolute;
+    top:10px;
+    right:12px;
+    background:white;
+    border:none;
+    border-radius:50%;
+    width:32px;
+    height:32px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* TEXT */
+.welcome-box h2{
+    font-size:22px;
+    font-weight:bold;
+}
+
+.welcome-box p{
+    font-size:14px;
+    margin-top:8px;
+}
+</style>
+<!-- WELCOME POPUP -->
+<div id="welcomePopup" class="welcome-popup">
+
+    <div class="welcome-box">
+
+        <!-- CLOSE BUTTON -->
+        <button class="close-btn" onclick="closeWelcome()">
+            ✖
+        </button>
+
+        <h2>Bienvenue sur GafouShop 🛍️</h2>
+
+        <p>
+            La boutique est ouverte ! Découvrez nos produits en mode, beauté, hygiène et plus.
+        </p>
+
+        <p>
+            Faites vos achats en toute sécurité et profitez de nos meilleures offres.
+        </p>
+
+        <h5>🎉 Bonne journée et bon shopping !</h5>
+
+       
+
+    </div>
+
+</div>
+<!-- ================= PRODUCTS ================= -->
+<div class="product-grid">
+
+{% for p in products %}
+
+<div class="product-item">
+
+    {% if p.prix_promo and p.prix_promo < p.prix %}
+        <div class="badge-promo">Promo</div>
+    {% endif %}
+
+    {% load static %}
+
+
+<a href="{% url 'product_detail' p.id %}" class="product-img-box">
+
+    <div class="product-slider" data-index="0">
+
+        {% if p.image %}
+            <img src="{{ p.image.url }}" class="slide active">
+        {% endif %}
+
+        {% if p.image2 %}
+            <img src="{{ p.image2.url }}" class="slide">
+        {% endif %}
+
+        {% if p.image3 %}
+            <img src="{{ p.image3.url }}" class="slide">
+        {% endif %}
+
+        {% if p.video %}
+            <video class="slide">
+                <source src="{{ p.video.url }}" type="video/mp4">
+            </video>
+        {% endif %}
+
+    </div>
+
+</a>
+
+    <div class="product-title">
+        {{ p.nom }}
+    </div>
+
+    <div class="price-box">
+        {% if p.prix_promo and p.prix_promo < p.prix %}
+            <div class="price-new">{{ p.prix_promo|floatformat:2 }} CAD</div>
+            <div class="price-old">{{ p.prix|floatformat:2 }} CAD</div>
+        {% else %}
+            <div class="price-new">{{ p.prix|floatformat:2 }} CAD</div>
+        {% endif %}
+    </div>
+
+    <div class="product-desc">
+        {{ p.description|truncatechars:80 }}
+    </div>
+
+   {% if user.is_authenticated %}
+    <a href="{% url 'add_to_cart' p.id %}" class="btn-add">
+        🛒 Ajouter
+    </a>
+{% else %}
+    <button class="btn-add login-btn" data-id="{{ p.id }}">
+        🔒 Se connecter pour ajouter
+    </button>
+{% endif %}
+
+</div>
+
+{% empty %}
+    <div class="empty-text">Aucun produit disponible</div>
+{% endfor %}
+
+</div>
+
+<div id="login-popup" class="login-popup">
+    <div class="login-box">
+        <h5>🔒 Connexion requise</h5>
+        <p>Connectez-vous pour ajouter des produits à votre panier.</p>
+
+        <a id="login-link" href="{% url 'login' %}" class="btn btn-primary w-100">
+            Se connecter
+        </a>
+
+        <button onclick="closeLoginMessage()" class="btn btn-light w-100 mt-2">
+            Annuler
+        </button>
+    </div>
+</div>
+<script>
+let selectedProductId = null;
+
+document.querySelectorAll(".login-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+        selectedProductId = this.dataset.id;
+
+        // mettre le redirect correct après login
+        document.getElementById("login-link").href =
+            "/login/?next=/add-to-cart/" + selectedProductId + "/";
+
+        document.getElementById("login-popup").classList.add("active");
+    });
+});
+
+function closeLoginMessage() {
+    document.getElementById("login-popup").classList.remove("active");
+}
+</script>
+<script>
+document.querySelectorAll(".product-slider").forEach(slider => {
+
+    let slides = slider.querySelectorAll(".slide");
+    let index = 0;
+
+    if(slides.length === 0) return;
+
+    setInterval(() => {
+        slides[index].classList.remove("active");
+
+        index = (index + 1) % slides.length;
+
+        slides[index].classList.add("active");
+    }, 2500); // changement toutes les 2.5 sec
+
+});
+</script>
+<script>
+function closeWelcome(){
+    document.getElementById("welcomePopup").style.display = "none";
+}
+</script>
+{% endblock %}

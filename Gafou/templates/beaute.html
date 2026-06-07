@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* PAGE */
+.mode-page{
+    background:#f6f7fb;
+    min-height:100vh;
+    padding:25px;
+}
+
+/* TITLE */
+.mode-title{
+    font-weight:700;
+    margin-bottom:20px;
+    color:#111;
+    animation:fadeDown 0.5s ease;
+}
+
+/* GRID */
+.mode-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+/* CARD */
+.mode-card{
+    background:white;
+    border-radius:15px;
+    padding:12px;
+    transition:0.3s;
+    box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    animation:fadeUp 0.5s ease;
+    position:relative;
+}
+
+.mode-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.12);
+}
+
+/* IMAGE */
+.mode-img{
+    width:100%;
+    height:170px;
+    object-fit:contain;
+    border-radius:10px;
+}
+
+/* NAME */
+.mode-name{
+    font-size:15px;
+    font-weight:600;
+    margin-top:8px;
+}
+
+/* DESC */
+.mode-desc{
+    font-size:12px;
+    color:#666;
+    margin-top:4px;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+}
+
+/* PRICE */
+.price{
+    font-weight:bold;
+    color:#0071dc;
+    margin-top:5px;
+}
+
+.old-price{
+    text-decoration:line-through;
+    color:#999;
+    font-size:12px;
+}
+
+/* BADGE */
+.badge{
+    background:red;
+    color:white;
+    font-size:10px;
+    padding:3px 6px;
+    border-radius:6px;
+    position:absolute;
+    top:8px;
+    left:8px;
+}
+
+/* BUTTON */
+.btn-view{
+    display:block;
+    text-align:center;
+    background:#0071dc;
+    color:white;
+    padding:6px;
+    border-radius:10px;
+    margin-top:8px;
+    text-decoration:none;
+    font-size:13px;
+    border:none;
+}
+
+/* RESPONSIVE */
+@media(max-width:992px){
+    .mode-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:768px){
+    .mode-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:480px){
+    .mode-grid{grid-template-columns:repeat(1,1fr);}
+}
+
+/* POPUP LOGIN */
+.login-popup{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    opacity:0;
+    visibility:hidden;
+    transition:0.3s;
+    z-index:9999;
+}
+
+.login-popup.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.login-box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    width:300px;
+}
+
+</style>
+
+<div class="mode-page">
+
+    <!-- TITLE -->
+    <h3 class="mode-title">
+        {% if current_type == "cosmetique" %}
+             Cosmétiques
+        {% elif current_type == "soin" %}
+             Soins & Bien-être
+        {% else %}
+         Beauté
+        {% endif %}
+    </h3>
+
+    <!-- GRID -->
+    <div class="mode-grid">
+
+        {% for p in products %}
+        <div class="mode-card">
+
+            {% if p.prix_promo and p.prix_promo < p.prix %}
+                <span class="badge">-{{ p.reduction }}%</span>
+            {% endif %}
+
+            <img src="{{ p.image.url }}" class="mode-img">
+
+            <div class="mode-name">{{ p.nom }}</div>
+
+            <div class="mode-desc">
+                {{ p.description }}
+            </div>
+
+            {% if p.prix_promo and p.prix_promo < p.prix %}
+                <div class="price">{{ p.prix_promo }} CAD</div>
+                <div class="old-price">{{ p.prix }} CAD</div>
+            {% else %}
+                <div class="price">{{ p.prix }} CAD</div>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_beaute_to_cart' p.id %}" class="btn-view">
+                    🛒 Ajouter au panier
+                </a>
+            {% else %}
+                <button class="btn-view login-btn" data-id="{{ p.id }}">
+                    🔒 Ajouter au panier
+                </button>
+            {% endif %}
+
+        </div>
+        {% empty %}
+            <p>Aucun produit disponible</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- POPUP LOGIN GLOBAL -->
+<div id="login-popup" class="login-popup">
+    <div class="login-box">
+        <h5>🔒 Connexion requise</h5>
+        <p>Connectez-vous pour ajouter des produits au panier.</p>
+
+        <a id="login-link" href="{% url 'login' %}" class="btn btn-primary w-100">
+            Se connecter
+        </a>
+
+        <button onclick="closeLoginMessage()" class="btn btn-light w-100 mt-2">
+            Annuler
+        </button>
+    </div>
+</div>
+
+<script>
+let selectedProductId = null;
+
+document.querySelectorAll(".login-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+        selectedProductId = this.dataset.id;
+
+        document.getElementById("login-link").href =
+            "/login/?next=/add-to-cart/" + selectedProductId + "/";
+
+        document.getElementById("login-popup").classList.add("active");
+    });
+});
+
+function closeLoginMessage() {
+    document.getElementById("login-popup").classList.remove("active");
+}
+</script>
+
+{% endblock %}

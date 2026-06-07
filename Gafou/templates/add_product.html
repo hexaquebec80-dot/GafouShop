@@ -1,0 +1,571 @@
+<!-- templates/add_product.html -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ajouter Produit - GafouShop</title>
+
+<!-- BOOTSTRAP -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- FONT AWESOME -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+body{
+    background:#f7f4f3;
+    font-family:Arial,sans-serif;
+    margin:0;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width:260px;
+    height:100vh;
+    background:#f2edec;
+    position:fixed;
+    left:0;
+    top:0;
+    border-right:1px solid #e5dcd9;
+    padding:25px;
+    overflow-y:auto;
+    box-shadow:0 2px 15px rgba(0,0,0,0.05);
+}
+
+.logo-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:40px;
+}
+
+.logo-img{
+    width:55px;
+    height:55px;
+    object-fit:contain;
+}
+
+.logo-text{
+    font-size:24px;
+    font-weight:bold;
+    color:#0071dc;
+}
+
+/* MENU */
+
+.menu-title{
+    font-size:13px;
+    color:#777;
+    margin-bottom:15px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    border-radius:14px;
+    text-decoration:none;
+    color:#333;
+    background:white;
+    margin-bottom:12px;
+    transition:0.3s;
+    border:1px solid #eee;
+    font-weight:600;
+}
+
+.menu a i{
+    color:#0071dc;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:#0071dc;
+    color:white;
+    transform:translateX(4px);
+}
+
+.menu a:hover i,
+.menu a.active i{
+    color:white;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+    margin-left:260px;
+    padding:35px;
+}
+
+/* TOP BAR */
+
+.top-header{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 8px 25px rgba(0,0,0,0.05);
+}
+
+.top-header h2{
+    margin:0;
+    font-weight:700;
+}
+
+.top-header p{
+    margin:5px 0 0;
+    color:#777;
+}
+
+/* =========================
+   FORM CARD
+========================= */
+
+.form-card{
+    background:white;
+    border-radius:25px;
+    padding:35px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.06);
+}
+
+/* SECTION */
+
+.section-title{
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:20px;
+    color:#111;
+}
+
+/* INPUT */
+
+.form-label{
+    font-weight:600;
+    margin-bottom:8px;
+    color:#222;
+}
+
+.form-control,
+.form-select{
+    border-radius:14px;
+    padding:14px;
+    border:1px solid #ddd;
+    transition:0.3s;
+}
+
+.form-control:focus,
+.form-select:focus{
+    border-color:#0071dc;
+    box-shadow:0 0 0 4px rgba(0,113,220,0.1);
+}
+
+/* IMAGE PREVIEW */
+
+.preview-box{
+    width:100%;
+    height:250px;
+    border:2px dashed #ddd;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:#fafafa;
+    margin-top:10px;
+}
+
+.preview-box img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+
+/* BUTTON */
+
+.btn-save{
+    background:linear-gradient(135deg,#0071dc,#00bfff);
+    color:white;
+    border:none;
+    padding:16px;
+    width:100%;
+    border-radius:16px;
+    font-size:16px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.btn-save:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(0,113,220,0.25);
+}
+
+/* BADGE */
+
+.badge-ui{
+    background:#eef6ff;
+    color:#0071dc;
+    padding:8px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:100%;
+        height:auto;
+        position:relative;
+    }
+
+    .content{
+        margin-left:0;
+    }
+
+    .top-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <div class="logo-box">
+
+        <img src="{% static 'images/Gafoulog.png' %}" class="logo-img">
+
+        <div class="logo-text">
+            GafouShop
+        </div>
+
+    </div>
+
+    <div class="menu-title">
+        Administration
+    </div>
+
+    <div class="menu">
+
+        <a href="/administration/">
+            <i class="fa-solid fa-chart-line"></i>
+            Dashboard
+        </a>
+
+        <a href="/administration/products/">
+            <i class="fa-solid fa-box"></i>
+            Produits
+        </a>
+
+        <a href="/administration/orders/">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Commandes
+        </a>
+
+        <a href="/administration/payments/">
+            <i class="fa-solid fa-credit-card"></i>
+            Paiements
+        </a>
+
+        <a href="/administration/add-product/" class="active">
+            <i class="fa-solid fa-plus"></i>
+            Ajouter Produit
+        </a>
+
+        <a href="/">
+            <i class="fa-solid fa-globe"></i>
+            Voir Boutique
+        </a>
+
+    </div>
+
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <!-- HEADER -->
+    <div class="top-header">
+
+        <div>
+
+            <h2>Ajouter Nouveau Produit</h2>
+
+            <p>
+                Gérez vos produits GafouShop facilement
+            </p>
+
+        </div>
+
+        <div class="badge-ui">
+            Administration Produit
+        </div>
+
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card">
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                <!-- LEFT -->
+                <div class="col-lg-8">
+
+                    <!-- INFO -->
+                    <div class="section-title">
+                        Informations Produit
+                    </div>
+
+                    <!-- NOM -->
+                    <div class="mb-4">
+
+                        <label class="form-label">
+                            Nom Produit
+                        </label>
+
+                        <input type="text"
+                               name="nom"
+                               class="form-control"
+                               placeholder="Ex: Nike Air Max"
+                               required>
+
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="mb-4">
+
+                        <label class="form-label">
+                            Description
+                        </label>
+
+                        <textarea name="description"
+                                  rows="6"
+                                  class="form-control"
+                                  placeholder="Description du produit..."></textarea>
+
+                    </div>
+
+                    <!-- PRICES -->
+                    <div class="row">
+
+                        <div class="col-md-6 mb-4">
+
+                            <label class="form-label">
+                                Prix
+                            </label>
+
+                            <input type="number"
+                                   step="0.01"
+                                   name="prix"
+                                   class="form-control"
+                                   placeholder="100"
+                                   required>
+
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+
+                            <label class="form-label">
+                                Prix Promo
+                            </label>
+
+                            <input type="number"
+                                   step="0.01"
+                                   name="prix_promo"
+                                   class="form-control"
+                                   placeholder="80">
+
+                        </div>
+
+                    </div>
+
+                    <!-- STOCK -->
+                    <div class="mb-4">
+
+                        <label class="form-label">
+                            Stock Disponible
+                        </label>
+
+                        <input type="number"
+                               name="stock"
+                               class="form-control"
+                               value="10">
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col-lg-4">
+
+                    <!-- IMAGE -->
+                    <div class="section-title">
+                        Image Produit
+                    </div>
+
+                    <input type="file"
+                           name="image"
+                           class="form-control"
+                           accept="image/*"
+                           onchange="previewImage(event)"
+                           required>
+
+                    <div class="preview-box mt-3">
+
+                        <img id="preview"
+                             src="https://via.placeholder.com/300x250?text=Preview">
+
+                    </div>
+
+                    <!-- CATEGORY -->
+                    <div class="section-title mt-4">
+                        Catégorie
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Catégorie
+                        </label>
+
+                        <select name="categorie"
+                                class="form-select">
+
+                            <option value="home">
+                                Produit Principal Home
+                            </option>
+
+                            <option value="mode">
+                                Mode
+                            </option>
+
+                            <option value="beaute">
+                                Beauté
+                            </option>
+
+                            <option value="hygiene">
+                                Hygiène
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- TYPE -->
+                    <div class="mb-4">
+
+                        <label class="form-label">
+                            Type Produit
+                        </label>
+
+                        <select name="type"
+                                class="form-select">
+
+                            <!-- MODE -->
+                            <option value="homme">
+                                Homme
+                            </option>
+
+                            <option value="femme">
+                                Femme
+                            </option>
+
+                            <option value="enfant">
+                                Enfant
+                            </option>
+
+                            <!-- BEAUTÉ -->
+                            <option value="cosmetique">
+                                Cosmétique
+                            </option>
+
+                            <option value="soin">
+                                Soin
+                            </option>
+
+                            <!-- HYGIÈNE -->
+                            <option value="corps">
+                                Corps
+                            </option>
+
+                            <option value="sante">
+                                Santé
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- BUTTON -->
+            <button class="btn-save">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Ajouter Produit
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+function previewImage(event){
+
+    const reader = new FileReader();
+
+    reader.onload = function(){
+
+        const output = document.getElementById('preview');
+
+        output.src = reader.result;
+    }
+
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+</script>
+
+</body>
+</html>

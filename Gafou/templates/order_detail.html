@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Détail Commande - Administration</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<style>
+
+body{
+    background:#f4f6f9;
+    font-family:Arial,sans-serif;
+}
+
+/* CONTAINER */
+.order-container{
+    max-width:1200px;
+    margin:40px auto;
+}
+
+/* CARD */
+.order-card{
+    background:white;
+    border-radius:25px;
+    padding:35px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+.order-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    margin-bottom:35px;
+}
+
+.order-title{
+    font-size:34px;
+    font-weight:bold;
+    color:#111827;
+}
+
+.order-subtitle{
+    color:#6b7280;
+    margin-top:5px;
+}
+
+/* STATUS */
+.status-badge{
+    padding:12px 22px;
+    border-radius:50px;
+    font-size:15px;
+    font-weight:bold;
+    color:white;
+    background:linear-gradient(135deg,#0071dc,#00bfff);
+}
+
+/* SECTION */
+.section-box{
+    background:#f8fafc;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+}
+
+.section-title{
+    font-size:22px;
+    font-weight:bold;
+    color:#0071dc;
+    margin-bottom:25px;
+}
+
+/* INFO */
+.info-item{
+    margin-bottom:20px;
+}
+
+.info-label{
+    font-size:14px;
+    color:#6b7280;
+    margin-bottom:5px;
+}
+
+.info-value{
+    font-size:18px;
+    font-weight:600;
+    color:#111827;
+}
+
+/* INPUT */
+.form-control,
+.form-select{
+    height:55px;
+    border-radius:14px;
+    border:1px solid #d1d5db;
+}
+
+textarea.form-control{
+    height:auto;
+}
+
+label{
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+/* PRODUCT */
+.product-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 0;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.product-item:last-child{
+    border-bottom:none;
+}
+
+.product-name{
+    font-size:18px;
+    font-weight:bold;
+    color:#111827;
+}
+
+.product-qty{
+    color:#6b7280;
+    margin-top:4px;
+}
+
+.product-price{
+    font-size:18px;
+    font-weight:bold;
+    color:#0071dc;
+}
+
+/* TOTAL */
+.total-box{
+    margin-top:25px;
+    padding-top:20px;
+    border-top:2px solid #ddd;
+}
+
+.total-line{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:28px;
+    font-weight:bold;
+    color:#0071dc;
+}
+
+/* BUTTONS */
+.action-buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:30px;
+}
+
+.btn-custom{
+    border:none;
+    padding:14px 24px;
+    border-radius:14px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.btn-custom:hover{
+    transform:translateY(-2px);
+}
+
+.btn-primary-custom{
+    background:linear-gradient(135deg,#0071dc,#00bfff);
+    color:white;
+}
+
+.btn-success-custom{
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+    color:white;
+}
+
+.btn-dark-custom{
+    background:#111827;
+    color:white;
+}
+
+.btn-warning-custom{
+    background:linear-gradient(135deg,#f59e0b,#fbbf24);
+    color:white;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    .order-header{
+        gap:20px;
+    }
+
+    .product-item{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+    }
+
+    .total-line{
+        font-size:22px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container order-container">
+
+    <div class="order-card">
+
+        <!-- HEADER -->
+        <div class="order-header">
+
+            <div>
+
+                <div class="order-title">
+                    <i class="fa-solid fa-box"></i>
+                    Commande #{{ order.id }}
+                </div>
+
+                <div class="order-subtitle">
+                    Commande créée le {{ order.created_at }}
+                </div>
+
+            </div>
+
+            <div class="status-badge">
+                {{ order.status }}
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <!-- CLIENT -->
+            <div class="col-lg-6">
+
+                <div class="section-box">
+
+                    <div class="section-title">
+                        <i class="fa-solid fa-user"></i>
+                        Informations Client
+                    </div>
+
+                    <!-- FORMULAIRE MODIFICATION -->
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-4">
+
+                                <label>Prénom</label>
+
+                                <input type="text"
+                                       name="prenom"
+                                       class="form-control"
+                                       value="{{ order.prenom }}"
+                                       required>
+
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+
+                                <label>Nom</label>
+
+                                <input type="text"
+                                       name="nom"
+                                       class="form-control"
+                                       value="{{ order.nom }}"
+                                       required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label>Adresse courriel</label>
+
+                            <input type="email"
+                                   name="email"
+                                   class="form-control"
+                                   value="{{ order.email }}"
+                                   required>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-4">
+
+                                <label>Indicatif</label>
+
+                                <input type="text"
+                                       name="indicatif"
+                                       class="form-control"
+                                       value="{{ order.indicatif }}"
+                                       required>
+
+                            </div>
+
+                            <div class="col-md-8 mb-4">
+
+                                <label>Téléphone</label>
+
+                                <input type="text"
+                                       name="telephone"
+                                       class="form-control"
+                                       value="{{ order.telephone }}"
+                                       required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label>Pays</label>
+
+                            <input type="text"
+                                   name="pays"
+                                   class="form-control"
+                                   value="{{ order.pays }}"
+                                   required>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label>Adresse de livraison</label>
+
+                            <textarea name="adresse"
+                                      class="form-control"
+                                      rows="4"
+                                      required>{{ order.adresse }}</textarea>
+
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-custom btn-warning-custom">
+
+                            <i class="fa-solid fa-pen"></i>
+                            Enregistrer les modifications
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- COMMANDE -->
+            <div class="col-lg-6">
+
+                <div class="section-box">
+
+                    <div class="section-title">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        Produits commandés
+                    </div>
+
+                    {% for item in order.orderitem_set.all %}
+
+                    <div class="product-item">
+
+                        <div>
+
+                            <div class="product-name">
+                                {{ item.product.nom }}
+                            </div>
+
+                            <div class="product-qty">
+                                Quantité : x{{ item.quantity }}
+                            </div>
+
+                        </div>
+
+                        <div class="product-price">
+                            {{ item.total_price }} CAD
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                    <!-- TOTAL -->
+                    <div class="total-box">
+
+                        <div class="total-line">
+
+                            <span>Total</span>
+
+                            <span>
+                                {{ order.total }} CAD
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="action-buttons">
+
+            <a href="/administration/orders/"
+               class="btn btn-custom btn-dark-custom">
+
+                <i class="fa-solid fa-arrow-left"></i>
+                Retour commandes
+
+            </a>
+
+            <a href="#"
+               class="btn btn-custom btn-success-custom">
+
+                <i class="fa-solid fa-check"></i>
+                Marquer comme payée
+
+            </a>
+
+            <a href="#"
+               class="btn btn-custom btn-primary-custom">
+
+                <i class="fa-solid fa-truck"></i>
+                Marquer expédiée
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

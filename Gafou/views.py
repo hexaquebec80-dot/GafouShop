@@ -3,9 +3,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from urllib3 import request
 from .models import Product
 from decimal import Decimal
+
 from django.db.models import Count
+
 
 from .models import (
     Product, Payment,
@@ -13,6 +16,7 @@ from .models import (
     Order, OrderItem
 )
 def home(request):
+
 
     # 🔹 Tous les produits récents avec nombre de favoris
     products = Product.objects.annotate(
@@ -35,12 +39,31 @@ def home(request):
     ).order_by('-created_at')[:8]
 
     # 🔥 Produits avec images avec nombre de favoris
+
+    # 🔹 Tous les produits récents (max 20 affichés)
+    products = Product.objects.all().order_by('-created_at')[:20]
+
+    # 🔹 Produits promo (max 6)
+    promo_products = Product.objects.filter(
+        prix_promo__isnull=False,
+        stock__gt=0
+    ).order_by('-created_at')[:6]
+
+    # 🔹 Produits disponibles (max 8)
+    available_products = Product.objects.filter(
+        stock__gt=0
+    ).order_by('-created_at')[:8]
+
+    # 🔥 Produits avec images (max 50)
+
     products_with_images = Product.objects.exclude(
         image=""
     ).exclude(
         image=None
+
     ).annotate(
         total_favoris=Count('favoris')
+
     ).order_by('-created_at')[:50]
 
     return render(request, "home.html", {
@@ -48,6 +71,9 @@ def home(request):
         "promo_products": promo_products,
         "available_products": available_products,
         "products_with_images": products_with_images,
+
+
+        # 🔐 LOGIN MODAL
 
         "login_error": request.session.pop('login_error', None),
         "open_login_modal": request.session.pop('open_login_modal', False)
@@ -279,49 +305,79 @@ def add_beaute_to_cart(request, product_id):
     return redirect('cart')
 
 
+import stripe
+
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.urls import reverse
+
+from .models import Order, OrderItem, Payment, CartItem
+
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+# =========================
+# CHECKOUT + STRIPE
+# =========================
 
 @login_required
 def checkout(request):
-    import stripe
-
-    from django.conf import settings
-    from django.urls import reverse
-    from django.shortcuts import redirect, render
-    from django.http import JsonResponse
-
-    stripe.api_key = settings.STRIPE_SECRET_KEY
 
     cart = get_cart(request.user)
     cart_items = CartItem.objects.filter(cart=cart)
 
-    if not cart_items.exists():
-        return redirect("cart")
+    # =========================
+    # TOTAL
+    # =========================
 
     final_total = 0
 
     for item in cart_items:
-        price = item.product.prix_promo if item.product.prix_promo and item.product.prix_promo > 0 else item.product.prix
+
+        if item.product.prix_promo and item.product.prix_promo > 0:
+            price = item.product.prix_promo
+        else:
+            price = item.product.prix
+
         final_total += price * item.quantity
 
+    # =========================
+    # SAVE ORDER + STRIPE
+    # =========================
+
     if request.method == "POST":
+
         order = Order.objects.create(
             user=request.user,
+
             prenom=request.POST.get("prenom"),
             nom=request.POST.get("nom"),
             email=request.POST.get("email"),
+
             indicatif=request.POST.get("indicatif"),
             telephone=request.POST.get("telephone"),
+
             pays=request.POST.get("pays"),
             adresse=request.POST.get("adresse"),
+
             total=final_total,
             status="PENDING",
             payment_status="PENDING"
         )
 
-        line_items = []
+        # =========================
+        # SAVE PRODUCTS
+        # =========================
 
         for item in cart_items:
-            price = item.product.prix_promo if item.product.prix_promo and item.product.prix_promo > 0 else item.product.prix
+
+            if item.product.prix_promo and item.product.prix_promo > 0:
+                price = item.product.prix_promo
+            else:
+                price = item.product.prix
 
             OrderItem.objects.create(
                 order=order,
@@ -330,50 +386,48 @@ def checkout(request):
                 price=price
             )
 
-            line_items.append({
-                "price_data": {
-                    "currency": "eur",
-                    "product_data": {
-                        "name": item.product.nom,
+        # =========================
+        # STRIPE PAYMENT
+        # =========================
+
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            mode="payment",
+
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "eur",
+                        "product_data": {
+                            "name": f"Commande GafouShop #{order.id}",
+                        },
+                        "unit_amount": int(final_total * 100),
                     },
-                    "unit_amount": int(price * 100),
-                },
-                "quantity": item.quantity,
-            })
-
-        try:
-            session = stripe.checkout.Session.create(
-                payment_method_types=["card"],
-                line_items=line_items,
-                mode="payment",
-                customer_email=order.email,
-                client_reference_id=str(order.id),
-                success_url=request.build_absolute_uri(
-                    reverse("stripe_success")
-                ) + "?session_id={CHECKOUT_SESSION_ID}",
-                cancel_url=request.build_absolute_uri(
-                    reverse("stripe_cancel")
-                ),
-                metadata={
-                    "order_id": str(order.id),
-                    "user_id": str(request.user.id),
+                    "quantity": 1,
                 }
-            )
+            ],
 
-            order.transaction_id = session.id
-            order.save()
+            metadata={
+                "order_id": order.id
+            },
 
-            return redirect(session.url)
+            success_url=request.build_absolute_uri(
+                reverse("stripe_success")
+            ) + "?session_id={CHECKOUT_SESSION_ID}",
 
-        except Exception as e:
-            order.status = "CANCELLED"
-            order.payment_status = "FAILED"
-            order.save()
+            cancel_url=request.build_absolute_uri(
+                reverse("stripe_cancel")
+            ),
+        )
 
-            return JsonResponse({
-            "ok": False,
-             "error": "Le montant minimum autorisé pour un paiement est de 0,50 €. Veuillez ajouter d'autres produits à votre panier ou choisir un produit d'une valeur supérieure."
-            })
+        order.transaction_id = session.id
+        order.save()
+
+        return redirect(session.url)
+
+    # =========================
+    # PAGE CHECKOUT
+    # =========================
 
     return render(request, "checkout.html", {
         "cart_items": cart_items,
@@ -381,17 +435,13 @@ def checkout(request):
     })
 
 
+# =========================
+# STRIPE SUCCESS
+# =========================
 
-import stripe
-
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from .models import Order, Payment, CartItem
-
-stripe.api_key = settings.STRIPE_SECRET_KEY
 @login_required
 def stripe_success(request):
+
     session_id = request.GET.get("session_id")
 
     if not session_id:
@@ -453,17 +503,18 @@ def stripe_success(request):
         except Exception as e:
             print("ERREUR EMAIL FACTURE :", e)
 
-        return render(request, "order_success.html", {
-            "order": order
-        })
+        return redirect("stripe_success_page")
 
-    print("Paiement Stripe non payé:", session.payment_status)
     return redirect("stripe_cancel")
+
+
+# =========================
+# STRIPE CANCEL
+# =========================
 
 @login_required
 def stripe_cancel(request):
-    return render(request, "paypal_error.html")
-
+    return render(request, "stripe_cancel.html")
 
 from io import BytesIO
 from django.template.loader import get_template
@@ -512,6 +563,71 @@ GafouShop
 
     email.send(fail_silently=False)
 
+
+
+    return redirect("paypal_error")
+
+
+
+
+
+# 💰 PAYPAL VERIFY (UNIQUE VERSION)
+@login_required
+def paypal_verify(request):
+    try:
+        data = json.loads(request.body)
+
+        status = data.get("status")
+        transaction_id = data.get("transaction_id")
+        amount = data.get("amount")
+        order_id = data.get("order_id")
+
+        # 🔒 sécurité
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+
+        if status == "COMPLETED":
+
+            order.status = "PAID"
+            order.save()
+
+            Payment.objects.create(
+                user=request.user,
+                order=order,
+                amount=amount,
+                transaction_id=transaction_id,
+                status=status
+            )
+
+            # 📧 EMAIL CLIENT
+            if request.user.email:
+                send_mail(
+                    "Commande confirmée",
+                    f"Votre commande #{order.id} est confirmée.",
+                    "noreply@gafoushop.com",
+                    [request.user.email],
+                    fail_silently=True
+                )
+
+            return JsonResponse({"ok": True})
+
+        else:
+            order.status = "CANCELLED"
+            order.save()
+            return JsonResponse({"ok": False})
+
+    except Exception as e:
+        print("Erreur PayPal:", e)
+        return JsonResponse({"ok": False})
+
+
+# ✅ SUCCESS
+def success(request):
+    return render(request, "success.html")
+
+
+# ❌ ERROR
+def error(request):
+    return render(request, "error.html")
 
 
 
@@ -693,6 +809,7 @@ def search(request):
     })
 
 
+
 from django.shortcuts import render
 from django.db.models import Count
 from .models import Mode
@@ -731,7 +848,6 @@ def beaute_page(request, type):
         'current_type': type
     })
 
-
 @login_required
 def add_beaute_favori(request, beaute_id):
 
@@ -744,6 +860,39 @@ def add_beaute_favori(request, beaute_id):
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
+
+from .models import Mode
+
+def mode_page(request, type):
+    products = Mode.objects.filter(type=type)
+
+    context = {
+        'products': products,
+        'current_type': type
+    }
+    return render(request, 'mode.html', context)
+
+
+
+
+
+
+from django.shortcuts import render
+from .models import Beaute
+
+
+# PAGE PRINCIPALE BEAUTE
+def beaute_page(request):
+    produits = Beaute.objects.all().order_by('-created_at')
+
+    context = {
+        'products': produits,
+        'current_type': 'all'
+    }
+    return render(request, 'beaute.html', context)
+
+
+
 # FILTRE PAR TYPE (cosmetique / soin)
 def beaute_type(request, type):
     produits = Beaute.objects.filter(type=type).order_by('-created_at')
@@ -753,6 +902,7 @@ def beaute_type(request, type):
         'current_type': type
     }
     return render(request, 'beaute.html', context)
+
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -766,11 +916,18 @@ def hygiene_page(request):
         total_favoris=Count('favoris')
     ).order_by('-id')
 
+
+
+from django.shortcuts import render
+from .models import Hygiene
+
+def hygiene_page(request):
+    products = Hygiene.objects.all()
+
     return render(request, 'hygiene.html', {
         'products': products,
         'current_type': 'all'
     })
-
 
 @login_required
 def add_hygiene_favori(request, hygiene_id):
@@ -783,6 +940,7 @@ def add_hygiene_favori(request, hygiene_id):
     )
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
 
 
 
@@ -885,11 +1043,12 @@ def admin_orders(request):
     return render(request, 'admin_orders.html', {
         'orders': orders
     })
+
 from .models import Order
+
 
 @staff_member_required
 def admin_payments(request):
-
     payments = Order.objects.filter(
         payment_status="PAID"
     ).order_by('-id')
@@ -908,6 +1067,16 @@ def admin_payments(request):
     )
 
 
+
+    payments = Payment.objects.all().order_by('-id')
+
+    return render(request, 'admin_payments.html', {
+        'payments': payments
+    })
+
+
+
+# views.p
 from django.shortcuts import render, redirect
 from .models import Product, Mode, Beaute, Hygiene
 
@@ -1426,6 +1595,7 @@ def edit_hygiene(request, id):
     # Afficher page
     return render(request, "edit_hygiene.html", {
         "hygiene": hygiene
+
     })
 
 from django.http import HttpResponse
@@ -2007,6 +2177,7 @@ def add_mode_favori(request, mode_id):
     )
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
 
 
 

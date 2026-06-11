@@ -10,10 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+
 import os
 from pathlib import Path
 import dj_database_url
 
+
+
+from pathlib import Path
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,6 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v3di-clfapy&ob&9f-*ob+dj$0t3s#n++p#vy#zsw8slkukikh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = os.environ.get("RENDER") is None
 
 ALLOWED_HOSTS = [
@@ -42,6 +47,10 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(
         RENDER_EXTERNAL_HOSTNAME
     )
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -65,8 +74,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'Gafou.middleware.BoutiqueBlockedMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+
 ]
 
 ROOT_URLCONF = 'GafouShop.urls'
@@ -93,12 +104,24 @@ WSGI_APPLICATION = 'GafouShop.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
     )
 }
+
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -140,6 +163,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # STATIC FILES
+
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
@@ -150,9 +174,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+
 # MEDIA (images produits)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
 
 
 
@@ -190,3 +219,19 @@ STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 # LOGIN
 
 LOGIN_URL = "/login/"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'tonemail@gmail.com'
+EMAIL_HOST_PASSWORD = 'motdepasse'
+
+
+LOGIN_URL = '/login/'
+
+
+PAYPAL_MODE = "sandbox"
+PAYPAL_CLIENT_ID = "AfPzHmzLO3rObKIcBni-Ycw6OmSXU-zZW_CGV-wQNRYtalqh3YhUcEImsawBAqZMRQ_zmVm3qE7JyOEG"
+PAYPAL_CLIENT_SECRET = "EOdIOHik0zOD7mjUXIQcHDjt0_8oWvVX3EUL-y7sJ8vupKYdxeyftGyHd3sE64h27srln7QSEcJremaG"
+

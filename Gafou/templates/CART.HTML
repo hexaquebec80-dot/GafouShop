@@ -41,9 +41,8 @@ body{
 .cart-item{
     display:flex;
     gap:18px;
-    background:rgba(255,255,255,.9);
-    backdrop-filter:blur(14px);
-    border:1px solid rgba(226,232,240,.9);
+    background:#fff;
+    border:1px solid #e5e7eb;
     border-radius:24px;
     padding:18px;
     margin-bottom:18px;
@@ -53,7 +52,6 @@ body{
 
 .cart-item:hover{
     transform:translateY(-5px);
-    box-shadow:0 25px 60px rgba(15,23,42,.13);
 }
 
 .cart-img{
@@ -115,13 +113,11 @@ body{
     text-decoration:none;
     font-size:18px;
     font-weight:800;
-    transition:.25s;
 }
 
 .qty-btn:hover{
     background:#2563eb;
     color:white;
-    transform:scale(1.08);
 }
 
 .qty{
@@ -131,7 +127,6 @@ body{
     background:#f1f5f9;
     padding:8px 12px;
     border-radius:12px;
-    color:#0f172a;
 }
 
 .item-total{
@@ -141,19 +136,15 @@ body{
 }
 
 .remove-btn{
-    display:inline-flex;
+    display:inline-block;
     margin-top:12px;
     color:#dc2626;
     font-weight:700;
     text-decoration:none;
 }
 
-.remove-btn:hover{
-    text-decoration:underline;
-}
-
 .summary{
-    background:#ffffff;
+    background:#fff;
     border-radius:28px;
     padding:26px;
     box-shadow:0 25px 70px rgba(15,23,42,.12);
@@ -175,9 +166,9 @@ body{
     justify-content:space-between;
     align-items:center;
     padding:13px 0;
+    border-bottom:1px dashed #e5e7eb;
     color:#475569;
     font-weight:600;
-    border-bottom:1px dashed #e5e7eb;
 }
 
 .summary-line span:last-child{
@@ -187,9 +178,7 @@ body{
 
 .total{
     border-bottom:none;
-    margin-top:8px;
     font-size:21px;
-    color:#0f172a;
 }
 
 .total span:last-child{
@@ -208,14 +197,11 @@ body{
     text-decoration:none;
     display:block;
     text-align:center;
-    box-shadow:0 15px 35px rgba(37,99,235,.28);
-    transition:.3s ease;
 }
 
 .checkout-btn:hover{
-    transform:translateY(-3px);
     color:white;
-    box-shadow:0 20px 45px rgba(37,99,235,.38);
+    transform:translateY(-3px);
 }
 
 .empty{
@@ -230,12 +216,10 @@ body{
     font-size:28px;
     font-weight:900;
     color:#0f172a;
-    margin-bottom:10px;
 }
 
 .empty p{
     color:#64748b;
-    margin-bottom:22px;
 }
 
 @media(max-width:900px){
@@ -257,6 +241,7 @@ body{
 
     .cart-title{
         font-size:26px;
+        text-align:center;
     }
 
     .cart-item{
@@ -293,21 +278,19 @@ body{
     <div class="cart-layout">
 
         <div>
-
             {% for item in items %}
-
             <div class="cart-item">
 
                 {% if item.product %}
-                    <img src="{{ item.product.image.url }}" class="cart-img">
+                    <img src="{{ item.product.image.url }}" class="cart-img" alt="{{ item.product.nom }}">
                 {% elif item.mode %}
-                    <img src="{{ item.mode.image.url }}" class="cart-img">
+                    <img src="{{ item.mode.image.url }}" class="cart-img" alt="{{ item.mode.nom }}">
                 {% elif item.beaute %}
-                    <img src="{{ item.beaute.image.url }}" class="cart-img">
+                    <img src="{{ item.beaute.image.url }}" class="cart-img" alt="{{ item.beaute.nom }}">
                 {% elif item.hygiene %}
-                    <img src="{{ item.hygiene.image.url }}" class="cart-img">
+                    <img src="{{ item.hygiene.image.url }}" class="cart-img" alt="{{ item.hygiene.nom }}">
                 {% else %}
-                    <img src="{% static 'images/no-image.png' %}" class="cart-img">
+                    <img src="{% static 'images/no-image.png' %}" class="cart-img" alt="Image non disponible">
                 {% endif %}
 
                 <div class="cart-info">
@@ -325,7 +308,6 @@ body{
                     </h5>
 
                     <div class="price">
-
                         {% if item.product %}
                             {% if item.product.prix_promo and item.product.prix_promo > 0 %}
                                 <span class="old-price">{{ item.product.prix }} €</span>
@@ -344,7 +326,7 @@ body{
 
                         {% elif item.beaute %}
                             {% if item.beaute.prix_promo and item.beaute.prix_promo > 0 %}
-                                <span class="old-price">{{ item.beaute.prix }} CAD</span>
+                                <span class="old-price">{{ item.beaute.prix }} €</span>
                                 <span class="promo-price">{{ item.beaute.prix_promo }} €</span>
                             {% else %}
                                 <span class="normal-price">{{ item.beaute.prix }} €</span>
@@ -352,13 +334,12 @@ body{
 
                         {% elif item.hygiene %}
                             {% if item.hygiene.prix_promo and item.hygiene.prix_promo > 0 %}
-                                <span class="old-price">{{ item.hygiene.prix }} CAD</span>
+                                <span class="old-price">{{ item.hygiene.prix }} €</span>
                                 <span class="promo-price">{{ item.hygiene.prix_promo }} €</span>
                             {% else %}
                                 <span class="normal-price">{{ item.hygiene.prix }} €</span>
                             {% endif %}
                         {% endif %}
-
                     </div>
 
                     <div class="qty-box">
@@ -378,9 +359,7 @@ body{
                 </div>
 
             </div>
-
             {% endfor %}
-
         </div>
 
         <div class="summary">
@@ -413,15 +392,12 @@ body{
     {% else %}
 
     <div class="empty">
-
         <h3>Votre panier est vide 🛒</h3>
-
         <p>Découvrez nos produits et commencez vos achats.</p>
 
         <a href="{% url 'home' %}" class="checkout-btn" style="max-width:260px;margin:auto;">
             Continuer mes achats
         </a>
-
     </div>
 
     {% endif %}

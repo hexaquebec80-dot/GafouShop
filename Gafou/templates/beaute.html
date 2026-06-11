@@ -27,7 +27,6 @@
     text-align:center;
     margin-bottom:25px;
     box-shadow:0 20px 50px rgba(236,72,153,.25);
-    animation:fadeDown .6s ease;
 }
 
 .tag-icon{
@@ -67,7 +66,6 @@
     overflow:hidden;
     box-shadow:0 10px 30px rgba(131,24,67,.07);
     transition:.35s ease;
-    animation:fadeUp .5s ease;
 }
 
 .mode-card:hover{
@@ -95,17 +93,6 @@
     font-size:14px;
     font-weight:900;
     box-shadow:0 8px 22px rgba(0,0,0,.14);
-    transition:.3s ease;
-}
-
-.fav-btn:hover{
-    background:var(--danger);
-    color:white;
-    transform:scale(1.06);
-}
-
-.fav-btn span{
-    font-size:12px;
 }
 
 .badge-promo{
@@ -137,11 +124,6 @@
     width:100%;
     height:100%;
     object-fit:contain;
-    transition:.35s ease;
-}
-
-.mode-card:hover .mode-img{
-    transform:scale(1.05);
 }
 
 .mode-name{
@@ -150,9 +132,6 @@
     font-weight:900;
     color:var(--dark);
     line-height:1.35;
-    min-height:40px;
-    max-height:42px;
-    overflow:hidden;
 }
 
 .mode-desc{
@@ -200,14 +179,10 @@
     font-size:13px;
     font-weight:900;
     cursor:pointer;
-    transition:.3s ease;
-    box-shadow:0 10px 22px rgba(236,72,153,.25);
 }
 
 .btn-view:hover{
-    background:linear-gradient(135deg,#9d174d,#db2777);
     color:white;
-    transform:translateY(-2px);
 }
 
 .empty-text{
@@ -222,7 +197,6 @@
     position:fixed;
     inset:0;
     background:rgba(15,23,42,.65);
-    backdrop-filter:blur(8px);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -244,8 +218,6 @@
     border-radius:28px;
     padding:28px;
     text-align:center;
-    box-shadow:0 30px 80px rgba(0,0,0,.25);
-    animation:popIn .35s ease;
 }
 
 .login-box h5{
@@ -256,21 +228,6 @@
 .login-box p{
     color:var(--muted);
     font-size:14px;
-}
-
-@keyframes fadeUp{
-    from{opacity:0;transform:translateY(20px);}
-    to{opacity:1;transform:translateY(0);}
-}
-
-@keyframes fadeDown{
-    from{opacity:0;transform:translateY(-15px);}
-    to{opacity:1;transform:translateY(0);}
-}
-
-@keyframes popIn{
-    from{transform:scale(.9) translateY(15px);opacity:0;}
-    to{transform:scale(1) translateY(0);opacity:1;}
 }
 
 @media(max-width:1100px){
@@ -284,53 +241,13 @@
         padding:12px;
     }
 
-    .mode-header{
-        border-radius:22px;
-        padding:24px 16px;
-    }
-
-    .tag-text{
-        font-size:22px;
-    }
-
     .mode-grid{
         grid-template-columns:repeat(2,1fr);
         gap:12px;
     }
 
-    .mode-card{
-        min-height:315px;
-        padding:10px;
-        border-radius:18px;
-    }
-
     .mode-img-box{
         height:135px;
-        border-radius:16px;
-    }
-
-    .mode-name{
-        font-size:13px;
-        min-height:36px;
-    }
-
-    .mode-desc{
-        font-size:11px;
-    }
-
-    .price{
-        font-size:14px;
-    }
-
-    .btn-view{
-        font-size:11px;
-        padding:9px;
-    }
-
-    .fav-btn{
-        min-width:42px;
-        height:36px;
-        font-size:12px;
     }
 }
 
@@ -348,12 +265,10 @@
             <span class="tag-icon">💄</span>
             <span class="tag-text">Cosmétiques</span>
             <span class="tag-sub">Maquillage, beauté & éclat au quotidien</span>
-
         {% elif current_type == "soin" %}
             <span class="tag-icon">🌸</span>
             <span class="tag-text">Soins & Bien-être</span>
             <span class="tag-sub">Produits doux pour prendre soin de vous</span>
-
         {% else %}
             <span class="tag-icon">✨</span>
             <span class="tag-text">Beauté</span>
@@ -367,19 +282,17 @@
         <div class="mode-card">
 
             {% if user.is_authenticated %}
-                <a href="{% url 'add_beaute_favori' p.id %}" class="fav-btn" title="Ajouter aux favoris">
-                    <i class="fa-solid fa-heart"></i>
-                    <span>{{ p.total_favoris|default:0 }}</span>
+                <a href="{% url 'add_beaute_favori' p.id %}" class="fav-btn">
+                    ❤️ <span>{{ p.total_favoris|default:0 }}</span>
                 </a>
             {% else %}
-                <button type="button" class="fav-btn login-btn" data-id="{{ p.id }}" title="Connexion requise">
-                    <i class="fa-solid fa-heart"></i>
-                    <span>{{ p.total_favoris|default:0 }}</span>
+                <button type="button" class="fav-btn login-btn" data-id="{{ p.id }}">
+                    ❤️ <span>{{ p.total_favoris|default:0 }}</span>
                 </button>
             {% endif %}
 
             {% if p.prix_promo and p.prix_promo < p.prix %}
-                <span class="badge-promo">-{{ p.reduction }}%</span>
+                <span class="badge-promo">PROMO</span>
             {% endif %}
 
             <a href="{% url 'product_detail' p.id %}" class="mode-img-box">
@@ -439,11 +352,7 @@
 <script>
 document.querySelectorAll(".login-btn").forEach(btn => {
     btn.addEventListener("click", function () {
-        const selectedProductId = this.dataset.id || "";
-
-        document.getElementById("login-link").href =
-            "{% url 'login' %}";
-
+        document.getElementById("login-link").href = "{% url 'login' %}";
         document.getElementById("login-popup").classList.add("active");
     });
 });

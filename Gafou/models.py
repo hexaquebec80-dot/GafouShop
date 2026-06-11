@@ -86,7 +86,7 @@ class CartItem(models.Model):
 
     quantity = models.IntegerField(default=1)
 
-# COMMANDE
+
 class Order(models.Model):
 
     STATUS_CHOICES = (
@@ -110,6 +110,25 @@ class Order(models.Model):
     indicatif = models.CharField(max_length=10)
     telephone = models.CharField(max_length=30)
     pays = models.CharField(max_length=100)
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    prenom = models.CharField(max_length=100)
+
+    nom = models.CharField(max_length=100)
+
+    email = models.EmailField()
+
+    indicatif = models.CharField(max_length=10)
+
+    telephone = models.CharField(max_length=30)
+
+    pays = models.CharField(max_length=100)
+
+
     adresse = models.TextField()
 
     total = models.DecimalField(
@@ -130,6 +149,7 @@ class Order(models.Model):
         default='UNPAID'
     )
 
+
     transaction_id = models.CharField(
         max_length=255,
         blank=True,
@@ -140,6 +160,16 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Commande #{self.id} - {self.prenom} {self.nom}"
+
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"Commande #{self.id} - {self.prenom} {self.nom}"
+
+
 
 # =========================
 # ORDER ITEM
@@ -330,7 +360,7 @@ class Boutique(models.Model):
     raison_blocage = models.TextField(
         blank=True,
         null=True
-    )
+        )       
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -404,3 +434,5 @@ class Favori(models.Model):
         if self.hygiene:
             return f"{self.user.username} - {self.hygiene.nom}"
         return self.user.username
+
+    

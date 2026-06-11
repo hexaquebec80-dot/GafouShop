@@ -64,6 +64,7 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
 
+
 # =========================
 # ORDER ADMIN
 # =========================
@@ -81,7 +82,9 @@ class OrderAdmin(admin.ModelAdmin):
         'total',
         'status',
         'payment_status',
+
         'transaction_id',
+
         'created_at',
     )
 
@@ -97,12 +100,16 @@ class OrderAdmin(admin.ModelAdmin):
         'nom',
         'email',
         'telephone',
+
         'transaction_id',
+
     )
 
     readonly_fields = (
         'created_at',
+
         'transaction_id',
+
     )
 
     inlines = [OrderItemInline]
@@ -298,6 +305,7 @@ class HygieneAdmin(admin.ModelAdmin):
     list_filter = ('type',)
     search_fields = ('nom',)
 
+
 from django.contrib import admin
 from .models import Favori
 
@@ -365,6 +373,7 @@ class FavoriAdmin(admin.ModelAdmin):
         return "-"
 
     get_type.short_description = "Catégorie"
+
 
 
 from django.contrib import admin

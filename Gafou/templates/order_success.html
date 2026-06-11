@@ -39,6 +39,25 @@ body{
     margin-bottom:30px;
 }
 
+
+
+.btn-pay{
+    display:inline-block;
+    padding:18px 35px;
+    border-radius:15px;
+    background:#0071dc;
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+    margin:10px;
+}
+
+.btn-pay:hover{
+    background:#005bb5;
+    color:white;
+}
+
+
 .btn-later{
     display:inline-block;
     padding:18px 35px;
@@ -50,17 +69,21 @@ body{
     margin:10px;
 }
 
+
 .btn-later:hover{
     background:#d1d5db;
     color:#111;
 }
+
 
 .payment-box{
     background:white;
     padding:25px;
     border-radius:18px;
     box-shadow:0 10px 30px rgba(0,0,0,0.08);
+
     margin-bottom:25px;
+
 }
 
 .payment-box h3{
@@ -72,6 +95,7 @@ body{
     display:flex;
     align-items:center;
     gap:15px;
+
     border:2px solid #635bff;
     border-radius:14px;
     padding:15px;
@@ -91,6 +115,20 @@ body{
     justify-content:center;
     font-weight:bold;
     font-size:14px;
+
+
+    border:2px solid #0070ba;
+    border-radius:14px;
+
+    padding:15px;
+    margin-bottom:20px;
+
+    background:#f8fbff;
+}
+
+.paypal-logo{
+    width:55px;
+
 }
 
 .payment-method p{
@@ -98,6 +136,7 @@ body{
     font-size:13px;
     color:#666;
 }
+
 
 .btn-stripe{
     display:block;
@@ -108,11 +147,33 @@ body{
     padding:14px;
     border-radius:14px;
     text-decoration:none;
+}
+.btn-paypal{
+    display:block;
+    width:100%;
+    text-align:center;
+
+    background:linear-gradient(135deg,#0070ba,#003087);
+
+    color:white;
+    padding:14px;
+
+    border-radius:14px;
+    text-decoration:none;
+
+
     font-weight:bold;
     transition:0.3s;
 }
 
+ HEAD
 .btn-stripe:hover{
+    transform:translateY(-2px);
+    color:white;
+}
+
+
+.btn-paypal:hover{
     transform:translateY(-2px);
     color:white;
 }
@@ -130,6 +191,7 @@ body{
     </div>
 
     <div class="text">
+
         Votre commande a été enregistrée avec succès.
         <br><br>
         Vous pouvez payer maintenant avec Stripe
@@ -159,6 +221,42 @@ body{
 
     </div>
 
+
+
+        Votre commande a été enregistrée avec succès.
+
+        <br><br>
+
+        Vous pouvez payer maintenant avec PayPal
+        ou payer plus tard.
+
+    </div>
+
+ <div class="payment-box">
+
+    <h3>Mode de paiement</h3>
+
+    <div class="payment-method active">
+
+        <img 
+            src="https://www.paypalobjects.com/webstatic/icon/pp258.png"
+            class="paypal-logo"
+        >
+
+        <div>
+            <strong>PayPal</strong>
+            <p>Paiement sécurisé par PayPal</p>
+        </div>
+
+    </div>
+
+    <a href="{% url 'paypal_verify' %}" class="btn-paypal">
+        💳 Payer avec PayPal
+    </a>
+
+</div>
+
+
     <a href="{% url 'home' %}" class="btn-later">
         ⏳ Payer plus tard
     </a>
@@ -167,3 +265,5 @@ body{
 
 </body>
 </html>
+
+

@@ -9,10 +9,7 @@
     --primary2:#14b8a6;
     --dark:#111827;
     --muted:#6b7280;
-    --bg:#f5f7fb;
-    --card:#ffffff;
     --border:#e5e7eb;
-    --gold:#f59e0b;
 }
 
 .product-page{
@@ -22,7 +19,7 @@
 }
 
 .product-card{
-    background:white;
+    background:#fff;
     border-radius:30px;
     padding:30px;
     box-shadow:0 25px 70px rgba(15,118,110,.12);
@@ -31,15 +28,15 @@
 
 .product-image-box{
     width:100%;
-    height:480px;
-    background:linear-gradient(135deg,#ffffff,#f1fdf9);
-    border-radius:26px;
-    overflow:hidden;
+    height:420px;
     display:flex;
     align-items:center;
     justify-content:center;
-    border:1px solid var(--border);
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
     position:relative;
+    border:1px solid var(--border);
 }
 
 .product-slider{
@@ -55,7 +52,7 @@
     position:absolute;
     inset:0;
     opacity:0;
-    transition:.5s ease;
+    transition:opacity .5s ease;
     padding:25px;
 }
 
@@ -151,6 +148,10 @@
     background:linear-gradient(135deg,var(--primary),var(--primary2));
     color:white;
     box-shadow:0 12px 28px rgba(20,184,166,.25);
+}
+
+.btn-buy:hover{
+    color:white;
 }
 
 .btn-cart{
@@ -290,221 +291,202 @@
 </style>
 
 <div class="product-page">
+    <div class="container">
 
-<div class="container">
+        <div class="product-card">
+            <div class="row g-5 align-items-center">
 
-    <div class="product-card">
+                <!-- IMAGE -->
+                <div class="col-lg-6">
+                    <div class="product-image-box">
 
-        <div class="row g-5 align-items-center">
+                        <div class="badge-stock">
+                            <i class="fa-solid fa-check"></i>
+                            Stock : {{ product.stock }}
+                        </div>
 
-            <!-- IMAGE -->
-            <div class="col-lg-6">
+                        <div class="product-slider">
 
-                <div class="product-image-box">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" class="slide active" alt="{{ product.nom }}">
+                            {% endif %}
 
-                    <div class="badge-stock">
-                        <i class="fa-solid fa-check"></i>
-                        Stock : {{ product.stock }}
+                            {% if product.image2 %}
+                                <img src="{{ product.image2.url }}" class="slide" alt="{{ product.nom }}">
+                            {% endif %}
+
+                            {% if product.image3 %}
+                                <img src="{{ product.image3.url }}" class="slide" alt="{{ product.nom }}">
+                            {% endif %}
+
+                            {% if product.video %}
+                                <video class="slide" muted autoplay loop playsinline>
+                                    <source src="{{ product.video.url }}" type="video/mp4">
+                                </video>
+                            {% endif %}
+
+                            {% if not product.image and not product.image2 and not product.image3 and not product.video %}
+                                <img src="{% static 'no-image.png' %}" class="slide active" alt="Aucune image">
+                            {% endif %}
+
+                        </div>
                     </div>
-
-                    <div class="product-slider">
-
-                        {% if product.image %}
-                            <img src="{{ product.image.url }}" class="slide active">
-                        {% endif %}
-
-                        {% if product.image2 %}
-                            <img src="{{ product.image2.url }}" class="slide">
-                        {% endif %}
-
-                        {% if product.image3 %}
-                            <img src="{{ product.image3.url }}" class="slide">
-                        {% endif %}
-
-                        {% if product.video %}
-                            <video class="slide" muted autoplay loop playsinline>
-                                <source src="{{ product.video.url }}" type="video/mp4">
-                            </video>
-                        {% endif %}
-
-                        {% if not product.image and not product.image2 and not product.image3 and not product.video %}
-                            <img src="{% static 'no-image.png' %}" class="slide active">
-                        {% endif %}
-
-                    </div>
-
                 </div>
 
-            </div>
+                <!-- INFO -->
+                <div class="col-lg-6">
+                    <div class="product-info">
 
-            <!-- INFO -->
-            <div class="col-lg-6">
+                        <h1 class="product-title">
+                            {{ product.nom }}
+                        </h1>
 
-                <div class="product-info">
+                        <div class="product-rating">
+                            <i class="fa-solid fa-star text-warning"></i>
+                            <i class="fa-solid fa-star text-warning"></i>
+                            <i class="fa-solid fa-star text-warning"></i>
+                            <i class="fa-solid fa-star text-warning"></i>
+                            <i class="fa-solid fa-star-half-stroke text-warning"></i>
+                            4.8 — Produit populaire
+                        </div>
 
-                    <h1 class="product-title">
-                        {{ product.nom }}
-                    </h1>
+                        <div class="price-box">
+                            {% if product.prix_promo and product.prix_promo < product.prix %}
+                                <h3 class="product-price">
+                                    {{ product.prix_promo }} €
+                                    <span class="promo-badge">PROMO</span>
+                                </h3>
 
-                    <div class="product-rating">
-                        <i class="fa-solid fa-star text-warning"></i>
-                        <i class="fa-solid fa-star text-warning"></i>
-                        <i class="fa-solid fa-star text-warning"></i>
-                        <i class="fa-solid fa-star text-warning"></i>
-                        <i class="fa-solid fa-star-half-stroke text-warning"></i>
-                        4.8 — Produit populaire
-                    </div>
+                                <div class="price-old">
+                                    {{ product.prix }} €
+                                </div>
+                            {% else %}
+                                <h3 class="product-price">
+                                    {{ product.prix }} €
+                                </h3>
+                            {% endif %}
+                        </div>
 
-                    <div class="price-box">
+                        <p class="product-desc">
+                            {{ product.description }}
+                        </p>
 
-                        {% if product.prix_promo and product.prix_promo < product.prix %}
+                        <div class="d-grid gap-3 mt-4">
 
-                            <h3 class="product-price">
-                                {{ product.prix_promo }} €
-                                <span class="promo-badge">PROMO</span>
-                            </h3>
+                            {% if user.is_authenticated %}
 
-                            <div class="price-old">
-                                {{ product.prix }} €
+                                <a href="{% url 'add_to_cart' product.id %}"
+                                   class="btn btn-main btn-buy">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    Ajouter au panier
+                                </a>
+
+                                <a href="{% url 'checkout' %}"
+                                   class="btn btn-main btn-cart">
+                                    <i class="fa-solid fa-bag-shopping"></i>
+                                    Acheter maintenant
+                                </a>
+
+                            {% else %}
+
+                                <a href="{% url 'login' %}?next={{ request.path }}"
+                                   class="btn btn-main btn-buy">
+                                    <i class="fa-solid fa-lock"></i>
+                                    Connectez-vous pour acheter
+                                </a>
+
+                            {% endif %}
+
+                            <a href="{% url 'add_favori' product.id %}"
+                               class="btn btn-main btn-fav">
+                                <i class="fa-solid fa-heart"></i>
+                                Ajouter aux favoris
+                            </a>
+
+                        </div>
+
+                        <div class="advantages">
+
+                            <div class="advantage">
+                                <i class="fa-solid fa-truck-fast"></i>
+                                Livraison rapide et suivie
                             </div>
 
-                        {% else %}
+                            <div class="advantage">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                Paiement sécurisé
+                            </div>
 
-                            <h3 class="product-price">
-                                {{ product.prix }} €
-                            </h3>
+                            <div class="advantage">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                Retour possible selon conditions
+                            </div>
 
-                        {% endif %}
+                            <div class="advantage">
+                                <i class="fa-solid fa-headset"></i>
+                                Support client disponible
+                            </div>
 
-                    </div>
-
-                    <p class="product-desc">
-                        {{ product.description }}
-                    </p>
-
-                    <div class="d-grid gap-3 mt-4">
-
-                        {% if user.is_authenticated %}
-
-                            <a href="{% url 'add_to_cart' product.id %}"
-                               class="btn btn-main btn-buy">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                Ajouter au panier
-                            </a>
-
-                            <a href="{% url 'checkout' %}"
-                               class="btn btn-main btn-cart">
-                                <i class="fa-solid fa-bag-shopping"></i>
-                                Acheter maintenant
-                            </a>
-
-                        {% else %}
-
-                            <a href="{% url 'login' %}?next={{ request.path }}"
-                               class="btn btn-main btn-buy">
-                                <i class="fa-solid fa-lock"></i>
-                                Connectez-vous pour acheter
-                            </a>
-
-                        {% endif %}
-
-                        <a href="{% url 'add_favori' product.id %}"
-   class="btn btn-main btn-fav">
-
-    <i class="fa-solid fa-heart"></i>
-    Ajouter aux favoris
-
-</a>
-
-                    </div>
-
-                    <div class="advantages">
-
-                        <div class="advantage">
-                            <i class="fa-solid fa-truck-fast"></i>
-                            Livraison rapide et suivie
-                        </div>
-
-                        <div class="advantage">
-                            <i class="fa-solid fa-shield-halved"></i>
-                            Paiement sécurisé avec PayPal
-                        </div>
-
-                        <div class="advantage">
-                            <i class="fa-solid fa-rotate-left"></i>
-                            Retour possible selon conditions
-                        </div>
-
-                        <div class="advantage">
-                            <i class="fa-solid fa-headset"></i>
-                            Support client disponible
                         </div>
 
                     </div>
-
                 </div>
 
             </div>
+        </div>
+
+        <hr class="my-5">
+
+        <h4 class="section-title">
+            🔥 Produits similaires
+        </h4>
+
+        <div class="row g-4">
+
+            {% for p in similar_products %}
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <div class="similar-card text-center">
+
+                        <a href="{% url 'product_detail' p.id %}">
+                            <div class="similar-img-box">
+                                {% if p.image %}
+                                    <img src="{{ p.image.url }}" class="similar-img" alt="{{ p.nom }}">
+                                {% else %}
+                                    <img src="{% static 'no-image.png' %}" class="similar-img" alt="Aucune image">
+                                {% endif %}
+                            </div>
+                        </a>
+
+                        <div class="similar-title">
+                            {{ p.nom|truncatechars:28 }}
+                        </div>
+
+                        <div class="similar-price">
+                            {{ p.get_price }} €
+                        </div>
+
+                        <a href="{% url 'product_detail' p.id %}"
+                           class="btn btn-view btn-sm w-100">
+                            Voir produit
+                        </a>
+
+                    </div>
+                </div>
+
+            {% empty %}
+
+                <div class="col-12">
+                    <div class="alert alert-light border">
+                        Aucun produit similaire disponible.
+                    </div>
+                </div>
+
+            {% endfor %}
 
         </div>
 
     </div>
-
-    <hr class="my-5">
-
-    <h4 class="section-title">
-        🔥 Produits similaires
-    </h4>
-
-    <div class="row g-4">
-
-        {% for p in similar_products %}
-
-        <div class="col-6 col-md-3 col-lg-2">
-
-            <div class="similar-card text-center">
-
-                <a href="{% url 'product_detail' p.id %}">
-                    <div class="similar-img-box">
-                        {% if p.image %}
-                            <img src="{{ p.image.url }}" class="similar-img">
-                        {% else %}
-                            <img src="{% static 'no-image.png' %}" class="similar-img">
-                        {% endif %}
-                    </div>
-                </a>
-
-                <div class="similar-title">
-                    {{ p.nom|truncatechars:28 }}
-                </div>
-
-                <div class="similar-price">
-                    {{ p.get_price }} €
-                </div>
-
-                <a href="{% url 'product_detail' p.id %}"
-                   class="btn btn-view btn-sm w-100">
-                    Voir produit
-                </a>
-
-            </div>
-
-        </div>
-
-        {% empty %}
-
-        <div class="col-12">
-            <div class="alert alert-light border">
-                Aucun produit similaire disponible.
-            </div>
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-</div>
-
 </div>
 
 <script>
@@ -516,7 +498,9 @@ document.querySelectorAll(".product-slider").forEach(slider => {
 
     setInterval(() => {
         slides[index].classList.remove("active");
+
         index = (index + 1) % slides.length;
+
         slides[index].classList.add("active");
     }, 3500);
 });

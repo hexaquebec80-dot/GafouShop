@@ -1,0 +1,525 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+:root{
+    --primary:#0f766e;
+    --primary2:#14b8a6;
+    --dark:#111827;
+    --muted:#6b7280;
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --border:#e5e7eb;
+    --gold:#f59e0b;
+}
+
+.product-page{
+    background:linear-gradient(180deg,#f8fafc,#eef7f5);
+    padding:50px 0;
+    min-height:100vh;
+}
+
+.product-card{
+    background:white;
+    border-radius:30px;
+    padding:30px;
+    box-shadow:0 25px 70px rgba(15,118,110,.12);
+    border:1px solid rgba(15,118,110,.08);
+}
+
+.product-image-box{
+    width:100%;
+    height:480px;
+    background:linear-gradient(135deg,#ffffff,#f1fdf9);
+    border-radius:26px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid var(--border);
+    position:relative;
+}
+
+.product-slider{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+
+.slide{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    position:absolute;
+    inset:0;
+    opacity:0;
+    transition:.5s ease;
+    padding:25px;
+}
+
+.slide.active{
+    opacity:1;
+}
+
+.badge-stock{
+    position:absolute;
+    top:20px;
+    left:20px;
+    background:#dcfce7;
+    color:#166534;
+    padding:9px 16px;
+    border-radius:50px;
+    font-size:13px;
+    font-weight:800;
+    z-index:5;
+}
+
+.product-info{
+    padding:10px 10px 10px 20px;
+}
+
+.product-title{
+    font-size:36px;
+    font-weight:900;
+    color:var(--dark);
+    line-height:1.15;
+    margin-bottom:12px;
+}
+
+.product-rating{
+    color:var(--muted);
+    font-size:15px;
+    margin-bottom:18px;
+}
+
+.price-box{
+    background:#f0fdfa;
+    border:1px solid #ccfbf1;
+    border-radius:22px;
+    padding:20px;
+    margin:20px 0;
+}
+
+.product-price{
+    color:var(--primary);
+    font-size:34px;
+    font-weight:900;
+    margin:0;
+}
+
+.price-old{
+    color:#9ca3af;
+    text-decoration:line-through;
+    font-size:17px;
+    margin-top:6px;
+}
+
+.promo-badge{
+    display:inline-block;
+    background:#fee2e2;
+    color:#b91c1c;
+    padding:6px 12px;
+    border-radius:50px;
+    font-size:12px;
+    font-weight:800;
+    margin-left:10px;
+}
+
+.product-desc{
+    color:#4b5563;
+    line-height:1.8;
+    font-size:16px;
+    margin-top:20px;
+}
+
+.btn-main{
+    border:none;
+    border-radius:18px;
+    padding:15px 20px;
+    font-weight:900;
+    font-size:16px;
+    transition:.25s;
+}
+
+.btn-main:hover{
+    transform:translateY(-3px);
+}
+
+.btn-buy{
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    color:white;
+    box-shadow:0 12px 28px rgba(20,184,166,.25);
+}
+
+.btn-cart{
+    background:white;
+    border:2px solid var(--primary);
+    color:var(--primary);
+}
+
+.btn-fav{
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    color:#c2410c;
+}
+
+.advantages{
+    margin-top:25px;
+    background:#ffffff;
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:22px;
+    display:grid;
+    gap:14px;
+}
+
+.advantage{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#374151;
+    font-weight:600;
+}
+
+.advantage i{
+    width:36px;
+    height:36px;
+    border-radius:12px;
+    background:#ecfdf5;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.section-title{
+    font-size:26px;
+    font-weight:900;
+    color:var(--dark);
+    margin-bottom:25px;
+}
+
+.similar-card{
+    background:white;
+    border-radius:24px;
+    padding:16px;
+    height:100%;
+    border:1px solid var(--border);
+    box-shadow:0 15px 35px rgba(0,0,0,.05);
+    transition:.25s;
+}
+
+.similar-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 25px 45px rgba(15,118,110,.14);
+}
+
+.similar-img-box{
+    height:150px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f9fafb;
+    border-radius:18px;
+    overflow:hidden;
+}
+
+.similar-img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:12px;
+}
+
+.similar-title{
+    font-size:14px;
+    font-weight:800;
+    color:var(--dark);
+    margin-top:14px;
+    min-height:38px;
+}
+
+.similar-price{
+    color:var(--primary);
+    font-size:17px;
+    font-weight:900;
+    margin-top:8px;
+}
+
+.btn-view{
+    background:var(--primary);
+    color:white;
+    border-radius:14px;
+    font-weight:800;
+    margin-top:12px;
+}
+
+.btn-view:hover{
+    background:#115e59;
+    color:white;
+}
+
+@media(max-width:768px){
+    .product-page{
+        padding:25px 0;
+    }
+
+    .product-card{
+        padding:18px;
+        border-radius:22px;
+    }
+
+    .product-image-box{
+        height:330px;
+    }
+
+    .product-info{
+        padding:20px 0 0;
+    }
+
+    .product-title{
+        font-size:26px;
+    }
+
+    .product-price{
+        font-size:28px;
+    }
+}
+</style>
+
+<div class="product-page">
+
+<div class="container">
+
+    <div class="product-card">
+
+        <div class="row g-5 align-items-center">
+
+            <!-- IMAGE -->
+            <div class="col-lg-6">
+
+                <div class="product-image-box">
+
+                    <div class="badge-stock">
+                        <i class="fa-solid fa-check"></i>
+                        Stock : {{ product.stock }}
+                    </div>
+
+                    <div class="product-slider">
+
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="slide active">
+                        {% endif %}
+
+                        {% if product.image2 %}
+                            <img src="{{ product.image2.url }}" class="slide">
+                        {% endif %}
+
+                        {% if product.image3 %}
+                            <img src="{{ product.image3.url }}" class="slide">
+                        {% endif %}
+
+                        {% if product.video %}
+                            <video class="slide" muted autoplay loop playsinline>
+                                <source src="{{ product.video.url }}" type="video/mp4">
+                            </video>
+                        {% endif %}
+
+                        {% if not product.image and not product.image2 and not product.image3 and not product.video %}
+                            <img src="{% static 'no-image.png' %}" class="slide active">
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- INFO -->
+            <div class="col-lg-6">
+
+                <div class="product-info">
+
+                    <h1 class="product-title">
+                        {{ product.nom }}
+                    </h1>
+
+                    <div class="product-rating">
+                        <i class="fa-solid fa-star text-warning"></i>
+                        <i class="fa-solid fa-star text-warning"></i>
+                        <i class="fa-solid fa-star text-warning"></i>
+                        <i class="fa-solid fa-star text-warning"></i>
+                        <i class="fa-solid fa-star-half-stroke text-warning"></i>
+                        4.8 — Produit populaire
+                    </div>
+
+                    <div class="price-box">
+
+                        {% if product.prix_promo and product.prix_promo < product.prix %}
+
+                            <h3 class="product-price">
+                                {{ product.prix_promo }} €
+                                <span class="promo-badge">PROMO</span>
+                            </h3>
+
+                            <div class="price-old">
+                                {{ product.prix }} €
+                            </div>
+
+                        {% else %}
+
+                            <h3 class="product-price">
+                                {{ product.prix }} €
+                            </h3>
+
+                        {% endif %}
+
+                    </div>
+
+                    <p class="product-desc">
+                        {{ product.description }}
+                    </p>
+
+                    <div class="d-grid gap-3 mt-4">
+
+                        {% if user.is_authenticated %}
+
+                            <a href="{% url 'add_to_cart' product.id %}"
+                               class="btn btn-main btn-buy">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                Ajouter au panier
+                            </a>
+
+                            <a href="{% url 'checkout' %}"
+                               class="btn btn-main btn-cart">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                                Acheter maintenant
+                            </a>
+
+                        {% else %}
+
+                            <a href="{% url 'login' %}?next={{ request.path }}"
+                               class="btn btn-main btn-buy">
+                                <i class="fa-solid fa-lock"></i>
+                                Connectez-vous pour acheter
+                            </a>
+
+                        {% endif %}
+
+                        <a href="{% url 'add_favori' product.id %}"
+   class="btn btn-main btn-fav">
+
+    <i class="fa-solid fa-heart"></i>
+    Ajouter aux favoris
+
+</a>
+
+                    </div>
+
+                    <div class="advantages">
+
+                        <div class="advantage">
+                            <i class="fa-solid fa-truck-fast"></i>
+                            Livraison rapide et suivie
+                        </div>
+
+                        <div class="advantage">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            Paiement sécurisé avec PayPal
+                        </div>
+
+                        <div class="advantage">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Retour possible selon conditions
+                        </div>
+
+                        <div class="advantage">
+                            <i class="fa-solid fa-headset"></i>
+                            Support client disponible
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="my-5">
+
+    <h4 class="section-title">
+        🔥 Produits similaires
+    </h4>
+
+    <div class="row g-4">
+
+        {% for p in similar_products %}
+
+        <div class="col-6 col-md-3 col-lg-2">
+
+            <div class="similar-card text-center">
+
+                <a href="{% url 'product_detail' p.id %}">
+                    <div class="similar-img-box">
+                        {% if p.image %}
+                            <img src="{{ p.image.url }}" class="similar-img">
+                        {% else %}
+                            <img src="{% static 'no-image.png' %}" class="similar-img">
+                        {% endif %}
+                    </div>
+                </a>
+
+                <div class="similar-title">
+                    {{ p.nom|truncatechars:28 }}
+                </div>
+
+                <div class="similar-price">
+                    {{ p.get_price }} €
+                </div>
+
+                <a href="{% url 'product_detail' p.id %}"
+                   class="btn btn-view btn-sm w-100">
+                    Voir produit
+                </a>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="alert alert-light border">
+                Aucun produit similaire disponible.
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</div>
+
+<script>
+document.querySelectorAll(".product-slider").forEach(slider => {
+    let slides = slider.querySelectorAll(".slide");
+    let index = 0;
+
+    if(slides.length <= 1) return;
+
+    setInterval(() => {
+        slides[index].classList.remove("active");
+        index = (index + 1) % slides.length;
+        slides[index].classList.add("active");
+    }, 3500);
+});
+</script>
+
+{% endblock %}

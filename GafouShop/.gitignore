@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+
+# Variables secrètes
+.env
+
+# Médias utilisateurs
+media/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Static générés par collectstatic
+staticfiles/

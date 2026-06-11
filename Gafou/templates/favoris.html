@@ -1,0 +1,14 @@
+<h2>Mes favoris</h2>
+
+{% for favori in favoris %}
+<div class="card mb-3">
+    <img src="{{ favori.product.image.url }}"
+         width="100">
+
+    <h5>{{ favori.product.name }}</h5>
+
+    <p>{{ favori.product.price }} €</p>
+</div>
+{% empty %}
+<p>Aucun favori.</p>
+{% endfor %}

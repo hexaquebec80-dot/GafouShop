@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+body{font-family:Arial;color:#222}
+.header{background:#0071dc;color:white;padding:25px;border-radius:12px}
+.title{font-size:28px;font-weight:bold}
+.box{border:1px solid #ddd;border-radius:12px;padding:15px;margin-top:20px}
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th{background:#0071dc;color:white;padding:10px;text-align:left}
+td{padding:10px;border-bottom:1px solid #eee}
+.total{text-align:right;font-size:22px;font-weight:bold;color:#0071dc;margin-top:20px}
+.footer{margin-top:35px;font-size:12px;color:#777}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="title">Facture GafouShop</div>
+    <p>Commande #{{ order.id }}</p>
+</div>
+
+<div class="box">
+    <h3>Client</h3>
+    <p>
+        {{ order.prenom }} {{ order.nom }}<br>
+        {{ order.email }}<br>
+        {{ order.indicatif }} {{ order.telephone }}<br>
+        {{ order.adresse }}<br>
+        {{ order.pays }}
+    </p>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order.items.all %}
+        <tr>
+            <td>{{ item.product.nom }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.price }} €</td>
+            <td>{{ item.price|floatformat:2 }} €</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="total">
+    Total payé : {{ order.total }} €
+</div>
+
+<div class="footer">
+    Paiement sécurisé Stripe confirmé.<br>
+    Merci pour votre achat chez GafouShop.
+</div>
+
+</body>
+</html>

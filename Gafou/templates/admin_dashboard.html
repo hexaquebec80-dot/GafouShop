@@ -1,0 +1,504 @@
+<!-- templates/admin_dashboard.html -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Administration GafouShop</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+body{
+    margin:0;
+    background:#f7f4f3;
+    font-family:Arial,sans-serif;
+    color:#111;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width:260px;
+    height:100vh;
+    position:fixed;
+    top:0;
+    left:0;
+    background:#f2edec;
+    border-right:1px solid #e5dcd9;
+    padding:25px;
+    overflow-y:auto;
+    box-shadow:0 2px 15px rgba(0,0,0,0.05);
+    z-index:1000;
+}
+
+.logo-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:40px;
+}
+
+.logo-img{
+    width:55px;
+    height:55px;
+    object-fit:contain;
+}
+
+.logo-text{
+    font-size:24px;
+    font-weight:bold;
+    color:#0071dc;
+}
+
+/* MENU */
+
+.menu-title{
+    font-size:13px;
+    color:#777;
+    margin-bottom:15px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    padding:14px;
+    margin-bottom:12px;
+    border-radius:14px;
+    background:white;
+    color:#333;
+    transition:0.3s ease;
+    border:1px solid #eee;
+    font-weight:600;
+}
+
+.menu a i{
+    color:#0071dc;
+    width:20px;
+}
+
+.menu a:hover{
+    background:#0071dc;
+    color:white;
+    transform:translateX(4px);
+    box-shadow:0 8px 20px rgba(0,113,220,0.2);
+}
+
+.menu a:hover i{
+    color:white;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+    margin-left:260px;
+    padding:35px;
+}
+
+/* TOP HEADER */
+
+.admin-top{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    margin-bottom:30px;
+}
+
+.admin-title h2{
+    margin:0;
+    font-weight:700;
+    color:#111;
+}
+
+.admin-title p{
+    margin:5px 0 0;
+    color:#777;
+}
+
+.admin-user{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.admin-user i{
+    font-size:22px;
+    color:#0071dc;
+    background:#eef6ff;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.card-dashboard{
+    background:white;
+    border-radius:22px;
+    padding:28px;
+    position:relative;
+    overflow:hidden;
+    transition:0.3s ease;
+    border:1px solid #eee;
+    box-shadow:0 8px 25px rgba(0,0,0,0.05);
+}
+
+.card-dashboard:hover{
+    transform:translateY(-6px);
+}
+
+.card-icon{
+    width:60px;
+    height:60px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    margin-bottom:20px;
+}
+
+.bg-blue{
+    background:#eef6ff;
+    color:#0071dc;
+}
+
+.bg-green{
+    background:#ecfff3;
+    color:#16a34a;
+}
+
+.bg-orange{
+    background:#fff4e8;
+    color:#ea580c;
+}
+
+.bg-purple{
+    background:#f3e8ff;
+    color:#9333ea;
+}
+
+.card-dashboard h1{
+    font-size:42px;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.card-dashboard p{
+    color:#666;
+    margin:0;
+    font-size:15px;
+}
+
+/* =========================
+   TABLE SECTION
+========================= */
+
+.table-box{
+    margin-top:35px;
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.05);
+}
+
+.table-box h4{
+    margin-bottom:20px;
+    font-weight:700;
+}
+
+.table{
+    border-radius:12px;
+    overflow:hidden;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn-admin{
+    background:#0071dc;
+    color:white;
+    padding:10px 18px;
+    border:none;
+    border-radius:12px;
+    text-decoration:none;
+    transition:0.3s;
+    font-weight:600;
+}
+
+.btn-admin:hover{
+    background:#005bb5;
+    color:white;
+    transform:scale(1.03);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:100%;
+        height:auto;
+        position:relative;
+    }
+
+    .content{
+        margin-left:0;
+    }
+
+    .admin-top{
+        flex-direction:column;
+        gap:20px;
+        align-items:flex-start;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <div class="logo-box">
+        <img src="{% static 'images/Gafoulog.png' %}" class="logo-img">
+        <div class="logo-text">GafouShop</div>
+    </div>
+
+    <div class="menu-title">
+        Administration
+    </div>
+
+    <div class="menu">
+
+        <a href="/administration/">
+            <i class="fa-solid fa-chart-line"></i>
+            Dashboard
+        </a>
+
+        <a href="/administration/products/">
+            <i class="fa-solid fa-box"></i>
+            Produits
+        </a>
+
+        <a href="/administration/orders/">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Commandes
+        </a>
+
+        <a href="/administration/payments/">
+            <i class="fa-solid fa-credit-card"></i>
+            Paiements
+        </a>
+
+        <a href="/administration/add-product/">
+            <i class="fa-solid fa-plus"></i>
+            Ajouter Produit
+        </a>
+
+        <a href="/">
+            <i class="fa-solid fa-globe"></i>
+            Voir Boutique
+        </a>
+
+    </div>
+
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <!-- TOP -->
+    <div class="admin-top">
+
+        <div class="admin-title">
+            <h2>Administration GafouShop</h2>
+            <p>Gestion complète de votre boutique en ligne</p>
+        </div>
+
+        <div class="admin-user">
+            <i class="fa-solid fa-user-shield"></i>
+
+            <div>
+                <strong>Administrateur</strong><br>
+                <small class="text-muted">
+                    Bienvenue sur le tableau de bord
+                </small>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CARDS -->
+    <div class="cards">
+
+        <!-- PRODUITS -->
+        <div class="card-dashboard">
+
+            <div class="card-icon bg-blue">
+                <i class="fa-solid fa-box"></i>
+            </div>
+
+            <h1>{{ products }}</h1>
+
+            <p>Produits disponibles</p>
+
+        </div>
+
+        <!-- COMMANDES -->
+        <div class="card-dashboard">
+
+            <div class="card-icon bg-green">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+
+            <h1>{{ orders }}</h1>
+
+            <p>Commandes reçues</p>
+
+        </div>
+
+        <!-- PAIEMENTS -->
+        <div class="card-dashboard">
+
+            <div class="card-icon bg-orange">
+                <i class="fa-solid fa-credit-card"></i>
+            </div>
+
+            <h1>{{ payments }}</h1>
+
+            <p>Paiements effectués</p>
+
+        </div>
+
+        <!-- CLIENTS -->
+        <div class="card-dashboard">
+
+            <div class="card-icon bg-purple">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <h1>{{ users }}</h1>
+
+            <p>Clients inscrits</p>
+
+        </div>
+
+    </div>
+
+    <!-- TABLE SECTION -->
+    <div class="table-box">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h4>Gestion rapide</h4>
+
+            <a href="/administration/add-product/" class="btn-admin">
+                + Ajouter Produit
+            </a>
+
+        </div>
+
+        <table class="table table-hover">
+
+            <thead class="table-light">
+                <tr>
+                    <th>Section</th>
+                    <th>Statut</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Produits</td>
+                    <td>
+                        <span class="badge bg-success">
+                            Actif
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/administration/products/" class="btn btn-sm btn-primary">
+                            Ouvrir
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Commandes</td>
+                    <td>
+                        <span class="badge bg-warning text-dark">
+                            En cours
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/administration/orders/" class="btn btn-sm btn-primary">
+                            Ouvrir
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Paiements</td>
+                    <td>
+                        <span class="badge bg-info">
+                            Vérifié
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/administration/payments/" class="btn btn-sm btn-primary">
+                            Ouvrir
+                        </a>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

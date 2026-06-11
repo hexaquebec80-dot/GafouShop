@@ -1,0 +1,468 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+:root{
+    --primary:#0071dc;
+    --primary-dark:#005bb5;
+    --danger:#e11d48;
+    --dark:#0f172a;
+    --muted:#64748b;
+    --bg:#f6f8fc;
+    --card:#ffffff;
+    --border:#e5e7eb;
+}
+
+/* PAGE */
+.mode-page{
+    background:var(--bg);
+    min-height:100vh;
+    padding:25px;
+}
+
+/* HERO TITLE */
+.mode-header{
+    background:linear-gradient(135deg,#071a3d,#0071dc,#00c6ff);
+    color:white;
+    border-radius:28px;
+    padding:30px 20px;
+    text-align:center;
+    margin-bottom:25px;
+    box-shadow:0 20px 50px rgba(0,113,220,.25);
+    animation:fadeDown .6s ease;
+}
+
+.tag-icon{
+    font-size:34px;
+    display:block;
+    margin-bottom:8px;
+}
+
+.tag-text{
+    display:block;
+    font-size:28px;
+    font-weight:900;
+}
+
+.tag-sub{
+    display:block;
+    font-size:14px;
+    opacity:.9;
+    margin-top:6px;
+}
+
+/* GRID */
+.mode-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+}
+
+/* CARD */
+.mode-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:14px;
+    min-height:350px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);
+    transition:.35s ease;
+    animation:fadeUp .5s ease;
+}
+
+.mode-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 22px 50px rgba(15,23,42,.14);
+}
+
+/* FAVORI */
+.fav-btn{
+    position:absolute;
+    top:14px;
+    right:14px;
+    z-index:10;
+    min-width:48px;
+    height:40px;
+    padding:0 10px;
+    border:none;
+    border-radius:999px;
+    background:white;
+    color:var(--danger);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:900;
+    box-shadow:0 8px 22px rgba(0,0,0,.14);
+    transition:.3s ease;
+}
+
+.fav-btn:hover{
+    background:var(--danger);
+    color:white;
+    transform:scale(1.06);
+}
+
+.fav-btn span{
+    font-size:12px;
+}
+
+/* BADGE */
+.badge-promo{
+    position:absolute;
+    top:14px;
+    left:14px;
+    z-index:9;
+    background:linear-gradient(135deg,#ef4444,#be123c);
+    color:white;
+    font-size:11px;
+    font-weight:900;
+    padding:6px 10px;
+    border-radius:999px;
+}
+
+/* IMAGE */
+.mode-img-box{
+    width:100%;
+    height:185px;
+    background:linear-gradient(180deg,#ffffff,#f1f5f9);
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+.mode-img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    transition:.35s ease;
+}
+
+.mode-card:hover .mode-img{
+    transform:scale(1.05);
+}
+
+/* TEXT */
+.mode-name{
+    margin-top:14px;
+    font-size:15px;
+    font-weight:900;
+    color:var(--dark);
+    line-height:1.35;
+    min-height:40px;
+    max-height:42px;
+    overflow:hidden;
+}
+
+.mode-desc{
+    margin-top:8px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+}
+
+/* PRICE */
+.price-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:8px;
+}
+
+.price{
+    font-weight:900;
+    color:var(--danger);
+    font-size:18px;
+}
+
+.old-price{
+    text-decoration:line-through;
+    color:#94a3b8;
+    font-size:13px;
+    font-weight:700;
+}
+
+/* BUTTON */
+.btn-view{
+    margin-top:auto;
+    width:100%;
+    border:none;
+    display:block;
+    text-align:center;
+    background:linear-gradient(135deg,var(--primary),#00aaff);
+    color:white;
+    padding:11px 14px;
+    border-radius:999px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:900;
+    cursor:pointer;
+    transition:.3s ease;
+    box-shadow:0 10px 22px rgba(0,113,220,.25);
+}
+
+.btn-view:hover{
+    background:linear-gradient(135deg,var(--primary-dark),var(--primary));
+    color:white;
+    transform:translateY(-2px);
+}
+
+/* EMPTY */
+.empty-text{
+    grid-column:1/-1;
+    text-align:center;
+    padding:50px;
+    color:var(--muted);
+    font-size:18px;
+}
+
+/* POPUP */
+.login-popup{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.65);
+    backdrop-filter:blur(8px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    visibility:hidden;
+    transition:.3s ease;
+    z-index:99999;
+}
+
+.login-popup.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.login-box{
+    width:90%;
+    max-width:420px;
+    background:white;
+    border-radius:28px;
+    padding:28px;
+    text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.25);
+    animation:popIn .35s ease;
+}
+
+.login-box h5{
+    font-weight:900;
+    margin-bottom:10px;
+}
+
+.login-box p{
+    color:var(--muted);
+    font-size:14px;
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(20px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes fadeDown{
+    from{opacity:0;transform:translateY(-15px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes popIn{
+    from{transform:scale(.9) translateY(15px);opacity:0;}
+    to{transform:scale(1) translateY(0);opacity:1;}
+}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+    .mode-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:768px){
+    .mode-page{
+        padding:12px;
+    }
+
+    .mode-header{
+        border-radius:22px;
+        padding:24px 16px;
+    }
+
+    .tag-text{
+        font-size:22px;
+    }
+
+    .mode-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:12px;
+    }
+
+    .mode-card{
+        min-height:315px;
+        padding:10px;
+        border-radius:18px;
+    }
+
+    .mode-img-box{
+        height:135px;
+        border-radius:16px;
+    }
+
+    .mode-name{
+        font-size:13px;
+        min-height:36px;
+    }
+
+    .mode-desc{
+        font-size:11px;
+    }
+
+    .price{
+        font-size:14px;
+    }
+
+    .btn-view{
+        font-size:11px;
+        padding:9px;
+    }
+
+    .fav-btn{
+        min-width:42px;
+        height:36px;
+        font-size:12px;
+    }
+}
+
+@media(max-width:380px){
+    .mode-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+
+<div class="mode-page">
+
+    <div class="mode-header">
+        {% if current_type == "homme" %}
+            <span class="tag-icon">👔</span>
+            <span class="tag-text">Collection Hommes</span>
+            <span class="tag-sub">Style, élégance & tendance masculine</span>
+
+        {% elif current_type == "femme" %}
+            <span class="tag-icon">👗</span>
+            <span class="tag-text">Collection Femmes</span>
+            <span class="tag-sub">Beauté, élégance & mode moderne</span>
+
+        {% elif current_type == "enfant" %}
+            <span class="tag-icon">🧒</span>
+            <span class="tag-text">Collection Enfants</span>
+            <span class="tag-sub">Confort, douceur & fun</span>
+
+        {% else %}
+            <span class="tag-icon">🛍️</span>
+            <span class="tag-text">Toutes les collections</span>
+            <span class="tag-sub">Découvrez nos meilleurs produits</span>
+        {% endif %}
+    </div>
+
+    <div class="mode-grid">
+
+        {% for p in products %}
+        <div class="mode-card">
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_mode_favori' p.id %}" class="fav-btn">
+    <i class="fa-solid fa-heart"></i>
+    <span>{{ p.total_favoris }}</span>
+</a>
+            {% else %}
+                <button type="button" onclick="showLoginMessage()" class="fav-btn" title="Connexion requise">
+                    <i class="fa-solid fa-heart"></i>
+                    <span>{{ p.total_favoris|default:0 }}</span>
+                </button>
+            {% endif %}
+
+            {% if p.prix_promo and p.prix_promo < p.prix %}
+                <span class="badge-promo">Promo</span>
+            {% endif %}
+
+            <a href="{% url 'product_detail' p.id %}" class="mode-img-box">
+                {% if p.image %}
+                    <img src="{{ p.image.url }}" class="mode-img" alt="{{ p.nom }}">
+                {% endif %}
+            </a>
+
+            <div class="mode-name">{{ p.nom }}</div>
+
+            <div class="mode-desc">
+                {{ p.description|truncatechars:90 }}
+            </div>
+
+            <div class="price-box">
+                {% if p.prix_promo and p.prix_promo < p.prix %}
+                    <div class="price">{{ p.prix_promo|floatformat:2 }} CAD</div>
+                    <div class="old-price">{{ p.prix|floatformat:2 }} CAD</div>
+                {% else %}
+                    <div class="price">{{ p.prix|floatformat:2 }} CAD</div>
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_mode_to_cart' p.id %}" class="btn-view">
+                    🛒 Ajouter au panier
+                </a>
+            {% else %}
+                <button type="button" onclick="showLoginMessage()" class="btn-view">
+                    🔒 Ajouter au panier
+                </button>
+            {% endif %}
+
+        </div>
+        {% empty %}
+            <div class="empty-text">Aucun produit disponible</div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<div id="login-popup" class="login-popup">
+    <div class="login-box">
+        <h5>🔒 Connexion requise</h5>
+        <p>Connectez-vous pour magasiner, ajouter au panier ou enregistrer vos favoris.</p>
+
+        <a href="{% url 'login' %}" class="btn btn-primary w-100">
+            Se connecter
+        </a>
+
+        <button onclick="closeLoginMessage()" class="btn btn-light w-100 mt-2">
+            Annuler
+        </button>
+    </div>
+</div>
+
+<script>
+function showLoginMessage(){
+    document.getElementById("login-popup").classList.add("active");
+}
+
+function closeLoginMessage(){
+    document.getElementById("login-popup").classList.remove("active");
+}
+</script>
+
+{% endblock %}

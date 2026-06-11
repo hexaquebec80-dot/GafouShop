@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+/* CARD */
+.card{
+  border-radius:14px;
+  transition:all 0.3s ease;
+  overflow:hidden;
+  border:none;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 35px rgba(0,0,0,0.12);
+}
+
+/* IMAGE */
+.card img{
+  height:180px;
+  width:100%;
+  object-fit:contain;
+  padding:10px;
+  transition:0.3s;
+}
+
+.card:hover img{
+  transform:scale(1.05);
+}
+
+/* TITLE */
+.card h5{
+  font-size:16px;
+  font-weight:600;
+  color:#111;
+  margin-bottom:5px;
+}
+
+/* PRICE */
+.card p{
+  font-weight:bold;
+  color:#007bff;
+  margin-bottom:5px;
+}
+
+.product-desc{
+  font-size:13px;
+  color:#666;
+  margin-top:5px;
+  line-height:1.5;
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+
+  /* moderne */
+  line-clamp:2;
+
+  /* compatibilité */
+  -webkit-line-clamp:2;
+
+  overflow:hidden;
+
+  max-height:calc(1.5em * 2);
+}
+
+/* BUTTON */
+.btn{
+  border-radius:10px;
+  font-size:13px;
+  padding:6px;
+  transition:0.3s;
+}
+
+.btn:hover{
+  transform:scale(1.05);
+}
+
+/* ANIMATION */
+@keyframes fadeInDesc{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* 🔥 MOBILE RESPONSIVE */
+@media (max-width:768px){
+
+  .card img{
+    height:140px;
+  }
+
+  .card h5{
+    font-size:14px;
+  }
+
+  .card p{
+    font-size:14px;
+  }
+
+  .product-desc{
+  font-size:13px;
+  color:#666;
+  margin-top:5px;
+  line-height:1.5;
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+
+  /* moderne */
+  line-clamp:2;
+
+  /* compatibilité */
+  -webkit-line-clamp:2;
+
+  overflow:hidden;
+
+  max-height:calc(1.5em * 2);
+   }
+
+  .btn{
+    font-size:12px;
+    padding:5px;
+  }
+
+}
+
+/* 🔥 PETIT MOBILE (iPhone SE etc) */
+@media (max-width:480px){
+
+  .card img{
+    height:120px;
+  }
+
+  .card{
+    padding:8px;
+  }
+
+}
+
+</style>
+<div class="container mt-5">
+
+  <h3>Résultat pour "{{ query }}"</h3>
+
+  <div class="row mt-4">
+
+    {% for p in products %}
+      <div class="col-md-3 mb-4">
+
+        <div class="card p-2 shadow-sm">
+
+          <img src="{{ p.image.url }}" class="img-fluid">
+
+          <h5 class="mt-2">{{ p.nom }}</h5>
+
+          <p>{{ p.prix }} CAD</p>
+
+          <!-- 🔥 DESCRIPTION AJOUTÉE -->
+          <div class="product-desc">
+              {{ p.description|truncatechars:80 }}
+          </div>
+
+          <a href="{% url 'product_detail' p.id %}" class="btn btn-primary mt-2">
+            Voir
+          </a>
+
+        </div>
+
+      </div>
+    {% empty %}
+
+      <p>Aucun produit trouvé 😢</p>
+
+    {% endfor %}
+
+  </div>
+
+</div>
+
+{% endblock %}

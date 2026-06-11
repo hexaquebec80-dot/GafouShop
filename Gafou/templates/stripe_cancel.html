@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5 text-center">
+
+    <div class="card shadow-lg border-0 rounded-4 p-5">
+
+        <h1 class="text-danger mb-3">
+            ❌ Paiement non finalisé
+        </h1>
+
+        <p class="lead text-muted">
+            Votre paiement Stripe a été annulé ou n’a pas pu être confirmé.
+        </p>
+
+        <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg mt-3">
+            💳 Réessayer le paiement
+        </a>
+
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg mt-3">
+            🏠 Retour accueil
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

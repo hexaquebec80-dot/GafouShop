@@ -1,0 +1,525 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+:root{
+    --primary:#0071dc;
+    --primary-dark:#005bb5;
+    --danger:#e11d48;
+    --dark:#0f172a;
+    --muted:#64748b;
+    --bg:#f6f8fc;
+    --card:#ffffff;
+    --border:#e5e7eb;
+}
+
+body{
+    background:var(--bg);
+}
+
+/* HERO */
+.shop-hero{
+    margin:20px;
+    padding:28px;
+    border-radius:28px;
+    background:linear-gradient(135deg,#071a3d,#0071dc,#00c6ff);
+    color:white;
+    box-shadow:0 20px 50px rgba(0,113,220,.25);
+}
+
+.shop-hero h1{
+    font-size:30px;
+    font-weight:800;
+    margin:0;
+}
+
+.shop-hero p{
+    margin-top:8px;
+    opacity:.9;
+}
+
+/* GRID */
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+    padding:20px;
+}
+
+/* CARD */
+.product-item{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:14px;
+    min-height:360px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);
+    transition:.35s ease;
+}
+
+.product-item:hover{
+    transform:translateY(-8px);
+    box-shadow:0 22px 50px rgba(15,23,42,.14);
+}
+
+/* BADGE */
+.badge-promo{
+    position:absolute;
+    top:14px;
+    left:14px;
+    z-index:5;
+    background:linear-gradient(135deg,#ef4444,#be123c);
+    color:white;
+    font-size:11px;
+    font-weight:800;
+    padding:6px 10px;
+    border-radius:999px;
+}
+
+/* IMAGE */
+.product-img-box{
+    width:100%;
+    height:190px;
+    background:linear-gradient(180deg,#ffffff,#f1f5f9);
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+.product-slider{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+
+.slide{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    position:absolute;
+    top:0;
+    left:0;
+    opacity:0;
+    transition:.6s ease;
+}
+
+.slide.active{
+    opacity:1;
+}
+
+/* TITLE */
+.product-title{
+    margin-top:14px;
+    font-size:15px;
+    font-weight:800;
+    color:var(--dark);
+    line-height:1.35;
+    min-height:40px;
+    max-height:42px;
+    overflow:hidden;
+}
+
+/* PRICE */
+.price-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:8px;
+}
+
+.price-new{
+    color:var(--danger);
+    font-size:18px;
+    font-weight:900;
+}
+
+.price-old{
+    color:#94a3b8;
+    font-size:13px;
+    text-decoration:line-through;
+}
+
+/* DESC */
+.product-desc{
+    margin-top:8px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+}
+
+/* BUTTON */
+.btn-add{
+    margin-top:auto;
+    width:100%;
+    border:none;
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    cursor:pointer;
+    background:linear-gradient(135deg,var(--primary),#00aaff);
+    color:white;
+    font-weight:800;
+    border-radius:999px;
+    padding:11px 14px;
+    font-size:13px;
+    transition:.3s ease;
+    box-shadow:0 10px 22px rgba(0,113,220,.25);
+}
+
+.btn-add:hover{
+    background:linear-gradient(135deg,var(--primary-dark),var(--primary));
+    transform:translateY(-2px);
+    color:white;
+}
+
+/* EMPTY */
+.empty-text{
+    grid-column:1/-1;
+    text-align:center;
+    padding:50px;
+    color:var(--muted);
+    font-size:18px;
+}
+
+/* POPUP LOGIN + WELCOME */
+.login-popup,
+.welcome-popup{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.65);
+    backdrop-filter:blur(8px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:99999;
+}
+
+.login-popup{
+    opacity:0;
+    visibility:hidden;
+    transition:.3s ease;
+}
+
+.login-popup.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.login-box,
+.welcome-box{
+    width:90%;
+    max-width:420px;
+    background:white;
+    border-radius:28px;
+    padding:28px;
+    text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.25);
+    animation:popIn .35s ease;
+}
+
+.welcome-box{
+    background:linear-gradient(135deg,#071a3d,#0071dc,#00c6ff);
+    color:white;
+    position:relative;
+}
+
+.login-box h5,
+.welcome-box h2{
+    font-weight:900;
+    margin-bottom:10px;
+}
+
+.login-box p,
+.welcome-box p{
+    color:inherit;
+    opacity:.85;
+    font-size:14px;
+}
+
+.close-btn{
+    position:absolute;
+    top:14px;
+    right:14px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:none;
+    background:white;
+    color:#0f172a;
+    font-weight:900;
+    cursor:pointer;
+}
+
+@keyframes popIn{
+    from{transform:scale(.9) translateY(15px);opacity:0;}
+    to{transform:scale(1) translateY(0);opacity:1;}
+}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+    .product-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:768px){
+    .shop-hero{
+        margin:12px;
+        padding:22px;
+        border-radius:22px;
+    }
+
+    .shop-hero h1{
+        font-size:23px;
+    }
+
+    .product-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:12px;
+        padding:12px;
+    }
+
+    .product-item{
+        min-height:310px;
+        padding:10px;
+        border-radius:18px;
+    }
+
+    .product-img-box{
+        height:135px;
+        border-radius:16px;
+    }
+
+    .product-title{
+        font-size:13px;
+        min-height:36px;
+    }
+
+    .product-desc{
+        font-size:11px;
+        -webkit-line-clamp:2;
+    }
+
+    .price-new{
+        font-size:14px;
+    }
+
+    .btn-add{
+        font-size:11px;
+        padding:9px;
+    }
+}
+
+@media(max-width:380px){
+    .product-grid{
+        grid-template-columns:1fr;
+    }
+}
+/* FAVORIS */
+.fav-btn{
+    position:absolute;
+    top:14px;
+    right:14px;
+    z-index:20;
+    min-width:48px;
+    height:42px;
+    padding:0 10px;
+    border:none;
+    border-radius:999px;
+    background:white;
+    color:#e11d48;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:800;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+    transition:.3s ease;
+}
+
+.fav-btn:hover{
+    background:#e11d48;
+    color:white;
+    transform:scale(1.05);
+}
+
+.fav-btn span{
+    font-size:12px;
+    font-weight:900;
+}
+</style>
+
+<!-- WELCOME POPUP -->
+<div id="welcomePopup" class="welcome-popup">
+    <div class="welcome-box">
+        <button class="close-btn" onclick="closeWelcome()">✖</button>
+
+        <h2>Bienvenue sur GafouShop 🛍️</h2>
+        <p>Découvrez nos produits en mode, beauté, hygiène et plus.</p>
+        <p>Faites vos achats en toute sécurité et profitez de nos meilleures offres.</p>
+        <h5>🎉 Bon shopping !</h5>
+    </div>
+</div>
+
+<!-- HERO -->
+<div class="shop-hero">
+    <h1>Découvrez nos meilleurs produits</h1>
+    <p>Mode, beauté, hygiène et offres spéciales disponibles maintenant.</p>
+</div>
+
+<!-- PRODUCTS -->
+<div class="product-grid">
+
+{% for p in products %}
+<div class="product-item">
+
+    {% if user.is_authenticated %}
+<a href="{% url 'add_favori' p.id %}"
+   class="fav-btn"
+   title="Ajouter aux favoris">
+
+    <i class="fa-solid fa-heart"></i>
+    <span>{{ p.favoris.count }}</span>
+
+</a>
+{% else %}
+<button class="fav-btn login-btn"
+        data-id="{{ p.id }}"
+        title="Connexion requise">
+
+    <i class="fa-solid fa-heart"></i>
+    <span>{{ p.favoris.count }}</span>
+
+</button>
+{% endif %}
+    {% if p.prix_promo and p.prix_promo < p.prix %}
+        <div class="badge-promo">Promo</div>
+    {% endif %}
+
+    {% load static %}
+
+    <a href="{% url 'product_detail' p.id %}" class="product-img-box">
+        <div class="product-slider" data-index="0">
+
+            {% if p.image %}
+                <img src="{{ p.image.url }}" class="slide active">
+            {% endif %}
+
+            {% if p.image2 %}
+                <img src="{{ p.image2.url }}" class="slide">
+            {% endif %}
+
+            {% if p.image3 %}
+                <img src="{{ p.image3.url }}" class="slide">
+            {% endif %}
+
+            {% if p.video %}
+                <video class="slide">
+                    <source src="{{ p.video.url }}" type="video/mp4">
+                </video>
+            {% endif %}
+
+        </div>
+    </a>
+
+    <div class="product-title">
+        {{ p.nom }}
+    </div>
+
+    <div class="price-box">
+        {% if p.prix_promo and p.prix_promo < p.prix %}
+            <div class="price-new">{{ p.prix_promo|floatformat:2 }} €</div>
+            <div class="price-old">{{ p.prix|floatformat:2 }} €</div>
+        {% else %}
+            <div class="price-new">{{ p.prix|floatformat:2 }} €</div>
+        {% endif %}
+    </div>
+
+    <div class="product-desc">
+        {{ p.description|truncatechars:80 }}
+    </div>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'add_to_cart' p.id %}" class="btn-add">
+            🛒 Ajouter au panier
+        </a>
+    {% else %}
+        <button class="btn-add login-btn" data-id="{{ p.id }}">
+            🔒 Se connecter pour ajouter
+        </button>
+    {% endif %}
+
+</div>
+
+{% empty %}
+    <div class="empty-text">Aucun produit disponible</div>
+{% endfor %}
+
+</div>
+
+<!-- LOGIN POPUP -->
+<div id="login-popup" class="login-popup">
+    <div class="login-box">
+        <h5>🔒 Connexion requise</h5>
+        <p>Connectez-vous pour ajouter ce produit à votre panier.</p>
+
+        <a id="login-link" href="{% url 'login' %}" class="btn btn-primary w-100">
+            Se connecter
+        </a>
+
+        <button onclick="closeLoginMessage()" class="btn btn-light w-100 mt-2">
+            Annuler
+        </button>
+    </div>
+</div>
+
+<script>
+let selectedProductId = null;
+
+document.querySelectorAll(".login-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+        selectedProductId = this.dataset.id;
+
+        document.getElementById("login-link").href =
+            "/login/?next=/add-to-cart/" + selectedProductId + "/";
+
+        document.getElementById("login-popup").classList.add("active");
+    });
+});
+
+function closeLoginMessage() {
+    document.getElementById("login-popup").classList.remove("active");
+}
+
+document.querySelectorAll(".product-slider").forEach(slider => {
+    let slides = slider.querySelectorAll(".slide");
+    let index = 0;
+
+    if(slides.length === 0) return;
+
+    setInterval(() => {
+        slides[index].classList.remove("active");
+        index = (index + 1) % slides.length;
+        slides[index].classList.add("active");
+    }, 2500);
+});
+
+function closeWelcome(){
+    document.getElementById("welcomePopup").style.display = "none";
+}
+</script>
+
+{% endblock %}

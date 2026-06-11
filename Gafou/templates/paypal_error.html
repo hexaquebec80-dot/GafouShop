@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+.error-payment-page{
+    min-height:75vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f4f7fb;
+    padding:40px 15px;
+}
+
+.error-payment-card{
+    max-width:720px;
+    width:100%;
+    background:white;
+    border-radius:30px;
+    padding:50px 35px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.10);
+}
+
+.error-icon{
+    width:100px;
+    height:100px;
+    margin:0 auto 25px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#ef4444,#f97316);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:48px;
+    font-weight:bold;
+}
+
+.error-payment-card h1{
+    font-size:36px;
+    font-weight:800;
+    color:#991b1b;
+    margin-bottom:15px;
+}
+
+.error-payment-card p{
+    color:#64748b;
+    font-size:17px;
+    margin-bottom:30px;
+}
+
+.action-buttons{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.btn-retry{
+    background:linear-gradient(135deg,#0071dc,#00bfff);
+    color:white;
+    padding:15px 32px;
+    border-radius:16px;
+    text-decoration:none;
+    font-weight:700;
+}
+
+.btn-home{
+    background:#e5e7eb;
+    color:#111827;
+    padding:15px 32px;
+    border-radius:16px;
+    text-decoration:none;
+    font-weight:700;
+}
+
+.btn-retry:hover,
+.btn-home:hover{
+    transform:translateY(-2px);
+    color:white;
+}
+
+.btn-home:hover{
+    color:#111827;
+}
+</style>
+
+<div class="error-payment-page">
+
+    <div class="error-payment-card">
+
+        <div class="error-icon">
+            !
+        </div>
+
+        <h1>Paiement non finalisé</h1>
+
+        <p>
+            Votre paiement a été annulé ou n’a pas pu être complété.
+            Vous pouvez réessayer le paiement ou retourner à l’accueil.
+        </p>
+
+        <div class="action-buttons">
+
+            <a href="{% url 'checkout' %}" class="btn-retry">
+                💳 Réessayer le paiement
+            </a>
+
+            <a href="{% url 'home' %}" class="btn-home">
+                🏠 Retour à l’accueil
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

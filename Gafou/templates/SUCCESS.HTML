@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+.success-page{
+    min-height:70vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f4f7fb;
+    padding:40px 15px;
+}
+
+.success-card{
+    max-width:650px;
+    width:100%;
+    background:white;
+    border-radius:28px;
+    padding:45px 35px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.10);
+}
+
+.success-icon{
+    width:95px;
+    height:95px;
+    margin:0 auto 25px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:45px;
+}
+
+.success-card h2{
+    font-size:34px;
+    font-weight:800;
+    color:#14532d;
+    margin-bottom:15px;
+}
+
+.success-card p{
+    color:#64748b;
+    font-size:17px;
+    margin-bottom:30px;
+}
+
+.btn-home{
+    display:inline-block;
+    background:linear-gradient(135deg,#0071dc,#00bfff);
+    color:white;
+    padding:15px 35px;
+    border-radius:16px;
+    text-decoration:none;
+    font-weight:700;
+    transition:.3s;
+}
+
+.btn-home:hover{
+    transform:translateY(-2px);
+    color:white;
+}
+</style>
+
+<div class="success-page">
+    <div class="success-card">
+
+        <div class="success-icon">✓</div>
+
+        <h2>Paiement réussi</h2>
+
+        <p>
+            Merci pour votre commande. Votre paiement a été confirmé avec succès.
+            Un reçu vous sera envoyé par courriel.
+        </p>
+
+        <a href="/" class="btn-home">
+            Retour à l’accueil
+        </a>
+
+    </div>
+</div>
+
+{% endblock %}

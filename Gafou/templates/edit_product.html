@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Modifier Produit</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins', sans-serif;
+        }
+
+        body{
+            background:#f3f6fb;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:40px 20px;
+        }
+
+        .container{
+            width:100%;
+            max-width:850px;
+        }
+
+        .admin-card{
+            background:#ffffff;
+            border-radius:24px;
+            overflow:hidden;
+            box-shadow:0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .top-bar{
+            background:linear-gradient(135deg,#1e3a8a,#2563eb);
+            padding:35px;
+            color:white;
+        }
+
+        .top-bar h1{
+            font-size:32px;
+            font-weight:700;
+            margin-bottom:8px;
+        }
+
+        .top-bar p{
+            opacity:0.9;
+            font-size:15px;
+        }
+
+        .content{
+            padding:40px;
+        }
+
+        .alert{
+            background:#fee2e2;
+            color:#b91c1c;
+            padding:14px;
+            border-radius:12px;
+            margin-bottom:25px;
+            font-size:14px;
+        }
+
+        .success{
+            background:#dcfce7;
+            color:#166534;
+        }
+
+        .image-preview{
+            text-align:center;
+            margin-bottom:35px;
+        }
+
+        .image-preview img{
+            width:180px;
+            height:180px;
+            object-fit:cover;
+            border-radius:20px;
+            border:5px solid #e0e7ff;
+            box-shadow:0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .form-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:25px;
+        }
+
+        .full-width{
+            grid-column:1 / -1;
+        }
+
+        .form-group{
+            display:flex;
+            flex-direction:column;
+        }
+
+        label{
+            margin-bottom:10px;
+            font-weight:600;
+            color:#374151;
+            font-size:15px;
+        }
+
+        .required{
+            color:red;
+        }
+
+        input,
+        textarea{
+            width:100%;
+            padding:15px;
+            border:1px solid #d1d5db;
+            border-radius:14px;
+            outline:none;
+            background:#f9fafb;
+            font-size:15px;
+            transition:0.3s;
+        }
+
+        input:focus,
+        textarea:focus{
+            border-color:#2563eb;
+            background:white;
+            box-shadow:0 0 0 4px rgba(37,99,235,0.12);
+        }
+
+        textarea{
+            min-height:150px;
+            resize:none;
+        }
+
+        .file-input{
+            background:white;
+            padding:12px;
+        }
+
+        .btn{
+            margin-top:30px;
+            width:100%;
+            padding:18px;
+            border:none;
+            border-radius:16px;
+            background:linear-gradient(135deg,#2563eb,#1d4ed8);
+            color:white;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 12px 25px rgba(37,99,235,0.25);
+        }
+
+        .small-text{
+            margin-top:10px;
+            color:#6b7280;
+            font-size:13px;
+        }
+
+        .stock-box{
+            background:#eff6ff;
+            border:1px solid #bfdbfe;
+            padding:12px;
+            border-radius:12px;
+            color:#1e40af;
+            font-size:14px;
+            margin-top:10px;
+        }
+
+        .promo-box{
+            background:#fef3c7;
+            border:1px solid #fcd34d;
+            padding:12px;
+            border-radius:12px;
+            color:#92400e;
+            font-size:14px;
+            margin-top:10px;
+        }
+
+        @media(max-width:768px){
+
+            .form-grid{
+                grid-template-columns:1fr;
+            }
+
+            .content{
+                padding:25px;
+            }
+
+            .top-bar{
+                padding:25px;
+            }
+
+            .top-bar h1{
+                font-size:26px;
+            }
+
+            .image-preview img{
+                width:140px;
+                height:140px;
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="admin-card">
+
+        <div class="top-bar">
+            <h1>Modifier le Produit</h1>
+            <p>Administration • Mise à jour des informations produit</p>
+        </div>
+
+        <div class="content">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'success' %}success{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="image-preview">
+
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.nom }}">
+                    {% endif %}
+
+                </div>
+
+                <div class="form-grid">
+
+                    <!-- NOM -->
+                    <div class="form-group">
+
+                        <label>
+                            Nom du produit <span class="required">*</span>
+                        </label>
+
+                        <input 
+                            type="text"
+                            name="name"
+                            value="{{ product.nom }}"
+                            placeholder="Entrer le nom du produit"
+                            required
+                        >
+
+                    </div>
+
+                    <!-- PRIX -->
+                    <div class="form-group">
+
+                        <label>
+                            Prix normal <span class="required">*</span>
+                        </label>
+
+                        <input 
+                            type="number"
+                            step="0.01"
+                            min="1"
+                            name="price"
+                            value="{{ product.prix }}"
+                            placeholder="0.00"
+                            required
+                        >
+
+                    </div>
+
+                    <!-- PRIX PROMO -->
+                    <div class="form-group">
+
+                        <label>
+                            Prix promotionnel
+                        </label>
+
+                        <input 
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            name="promo_price"
+                            value="{{ product.prix_promo }}"
+                            placeholder="0.00"
+                        >
+
+                        <div class="promo-box">
+                            Laisser vide si aucun prix promotionnel.
+                        </div>
+
+                    </div>
+
+                    <!-- STOCK -->
+                    <div class="form-group">
+
+                        <label>
+                            Stock disponible <span class="required">*</span>
+                        </label>
+
+                        <input 
+                            type="number"
+                            name="stock"
+                            value="{{ product.stock }}"
+                            placeholder="Quantité en stock"
+                            min="0"
+                            required
+                        >
+
+                        <div class="stock-box">
+                            Quantité actuelle disponible en boutique.
+                        </div>
+
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="form-group full-width">
+
+                        <label>
+                            Description <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                            name="description"
+                            placeholder="Description du produit..."
+                            required
+                        >{{ product.description }}</textarea>
+
+                    </div>
+
+                    <!-- IMAGE -->
+                    <div class="form-group full-width">
+
+                        <label>Changer l'image</label>
+
+                        <input 
+                            class="file-input"
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                        >
+
+                        <p class="small-text">
+                            Formats acceptés : JPG, PNG, WEBP
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <button class="btn" type="submit">
+                    Mettre à jour le produit
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

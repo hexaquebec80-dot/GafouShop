@@ -30,9 +30,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='product',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=1),
-            preserve_default=False,
+            field=models.DateTimeField(auto_now_add=True),
         ),
+
         migrations.AddField(
             model_name='product',
             name='prix_promo',

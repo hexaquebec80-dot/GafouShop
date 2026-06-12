@@ -33,10 +33,20 @@ SECRET_KEY = 'django-insecure-v3di-clfapy&ob&9f-*ob+dj$0t3s#n++p#vy#zsw8slkukikh
 # SECURITY WARNING: don't run with debug turned on in production!
 
 DEBUG = os.environ.get("RENDER") is None
+
+
+
+DEBUG = False
+
 ALLOWED_HOSTS = [
     "gafoushop.onrender.com",
+    ".onrender.com",
     "localhost",
     "127.0.0.1",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://gafoushop.onrender.com",
 ]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get(
@@ -47,9 +57,9 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(
         RENDER_EXTERNAL_HOSTNAME
     )
-DEBUG = False
 
-ALLOWED_HOSTS = []
+
+
 
 
 

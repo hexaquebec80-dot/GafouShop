@@ -351,7 +351,7 @@
                 <span class="badge-promo">PROMO</span>
             {% endif %}
 
-            <a href="{% url 'product_detail' p.id %}" class="mode-img-box">
+           <a href="{% url 'mode_detail' p.id %}" class="mode-img-box">
                 {% if p.image %}
                     <img src="{{ p.image.url }}" class="mode-img" alt="{{ p.nom }}">
                 {% endif %}
@@ -367,10 +367,10 @@
 
             <div class="price-box">
                 {% if p.prix_promo and p.prix_promo < p.prix %}
-                    <div class="price">{{ p.prix_promo|floatformat:2 }} CAD</div>
-                    <div class="old-price">{{ p.prix|floatformat:2 }} CAD</div>
+                    <div class="price">{{ p.prix_promo|floatformat:2 }} €</div>
+                    <div class="old-price">{{ p.prix|floatformat:2 }} €</div>
                 {% else %}
-                    <div class="price">{{ p.prix|floatformat:2 }} CAD</div>
+                    <div class="price">{{ p.prix|floatformat:2 }} €</div>
                 {% endif %}
             </div>
 

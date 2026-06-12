@@ -2181,3 +2181,52 @@ def add_mode_favori(request, mode_id):
 
 
 
+from django.shortcuts import render, get_object_or_404
+from .models import Hygiene
+
+def hygiene_detail(request, id):
+    produit = get_object_or_404(Hygiene, id=id)
+
+    return render(request, 'product_detail.html', {
+        'product': produit
+    })
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Mode
+
+def mode_detail(request, id):
+
+    produit = get_object_or_404(
+        Mode,
+        id=id
+    )
+
+    return render(
+        request,
+        'product_detail.html',
+        {
+            'product': produit
+        }
+    )
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Beaute
+
+def beaute_detail(request, id):
+
+    produit = get_object_or_404(
+        Beaute,
+        id=id
+    )
+
+    return render(
+        request,
+        'product_detail.html',
+        {
+            'product': produit
+        }
+    )

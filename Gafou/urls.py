@@ -133,6 +133,9 @@ urlpatterns = [
 # URLS.PY
 
   path("administration/edit-hygiene/<int:id>/",views.edit_hygiene,name="edit_hygiene"),
+  path('hygiene/detail/<int:id>/',views.hygiene_detail,name='hygiene_detail'),
+  path('mode/detail/<int:id>/', views.mode_detail,name='mode_detail'),
+  path('beaute/detail/<int:id>/',views.beaute_detail,name='beaute_detail'),
 
 
 

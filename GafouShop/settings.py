@@ -242,3 +242,12 @@ PAYPAL_MODE = "sandbox"
 PAYPAL_CLIENT_ID = "AfPzHmzLO3rObKIcBni-Ycw6OmSXU-zZW_CGV-wQNRYtalqh3YhUcEImsawBAqZMRQ_zmVm3qE7JyOEG"
 PAYPAL_CLIENT_SECRET = "EOdIOHik0zOD7mjUXIQcHDjt0_8oWvVX3EUL-y7sJ8vupKYdxeyftGyHd3sE64h27srln7QSEcJremaG"
 
+import os
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"

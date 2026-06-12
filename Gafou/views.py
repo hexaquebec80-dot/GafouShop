@@ -322,12 +322,19 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # =========================
 # CHECKOUT + STRIPE
 # =========================
+# =========================
+# CHECKOUT + STRIPE
+# =========================
 
 @login_required
 def checkout(request):
 
     cart = get_cart(request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
+
+    # On enlève les produits supprimés du panier
+    CartItem.objects.filter(cart=cart, product__isnull=True).delete()
+
+    cart_items = CartItem.objects.filter(cart=cart).select_related("product")
 
     # =========================
     # TOTAL
@@ -337,12 +344,19 @@ def checkout(request):
 
     for item in cart_items:
 
+        if not item.product:
+            continue
+
         if item.product.prix_promo and item.product.prix_promo > 0:
             price = item.product.prix_promo
         else:
             price = item.product.prix
 
         final_total += price * item.quantity
+
+    # Si panier vide
+    if final_total <= 0:
+        return redirect("cart")
 
     # =========================
     # SAVE ORDER + STRIPE
@@ -373,6 +387,9 @@ def checkout(request):
         # =========================
 
         for item in cart_items:
+
+            if not item.product:
+                continue
 
             if item.product.prix_promo and item.product.prix_promo > 0:
                 price = item.product.prix_promo
@@ -433,7 +450,6 @@ def checkout(request):
         "cart_items": cart_items,
         "final_total": final_total
     })
-
 
 # =========================
 # STRIPE SUCCESS

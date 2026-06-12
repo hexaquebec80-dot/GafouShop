@@ -36,16 +36,18 @@ DEBUG = os.environ.get("RENDER") is None
 
 
 
-DEBUG = True
-
+DEBUG = False
 ALLOWED_HOSTS = [
+    "gafoushop.com",
+    "www.gafoushop.com",
     "gafoushop.onrender.com",
     ".onrender.com",
     "localhost",
     "127.0.0.1",
 ]
-
 CSRF_TRUSTED_ORIGINS = [
+    "https://gafoushop.com",
+    "https://www.gafoushop.com",
     "https://gafoushop.onrender.com",
 ]
 

@@ -36,7 +36,7 @@ DEBUG = os.environ.get("RENDER") is None
 
 
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "gafoushop.onrender.com",

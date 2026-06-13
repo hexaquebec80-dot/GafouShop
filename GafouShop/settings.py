@@ -247,3 +247,11 @@ PAYPAL_MODE = "sandbox"
 PAYPAL_CLIENT_ID = "AfPzHmzLO3rObKIcBni-Ycw6OmSXU-zZW_CGV-wQNRYtalqh3YhUcEImsawBAqZMRQ_zmVm3qE7JyOEG"
 PAYPAL_CLIENT_SECRET = "EOdIOHik0zOD7mjUXIQcHDjt0_8oWvVX3EUL-y7sJ8vupKYdxeyftGyHd3sE64h27srln7QSEcJremaG"
 
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}

@@ -138,9 +138,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # STATIC FILES - logos, CSS, JS
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
 STATICFILES_DIRS = [
-    BASE_DIR / "GafouShop" / "static",
+    BASE_DIR / "static",
 ]
 
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"

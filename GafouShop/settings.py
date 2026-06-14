@@ -142,7 +142,7 @@ STATICFILES_DIRS = [
 ]
 
 
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+
 
 
 

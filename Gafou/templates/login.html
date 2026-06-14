@@ -2,207 +2,353 @@
 
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Connexion - GafouShop</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-
-    /* ================= PAGE ================= */
-    body {
-        background: #fff;
-        font-family: Arial, sans-serif;
-        margin: 0;
-    }
-
-    /* CENTER WRAPPER */
-    .login-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 30px 15px;
-        min-height: 100vh;
-        background: #fff;
-    }
-
-    /* ================= LOGO ================= */
-    .logo {
-        width: 120px;
-        display: block;
-        margin: 0 auto 20px;
-    }
-
-    /* ================= CARD ================= */
-    .login-box {
-        width: 100%;
-        max-width: 360px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 20px 26px;
-        background: #fff;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-
-    h1 {
-        font-size: 28px;
-        font-weight: 400;
-        margin-bottom: 20px;
-        color: #111;
-    }
-
-    label {
-        font-weight: 700;
-        font-size: 13px;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    /* INPUT */
-    .form-control {
-        height: 40px;
-        font-size: 14px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-    }
-
-    .form-control:focus {
-        border-color: #e77600;
-        box-shadow: 0 0 0 3px rgba(228,121,17,0.2);
-    }
-
-    /* BUTTON */
-    .btn-signin {
-        background: #ffd814;
-        border: 1px solid #fcd200;
-        width: 100%;
-        padding: 10px;
-        font-size: 14px;
-        font-weight: 600;
-        border-radius: 8px;
-        margin-top: 10px;
-        transition: 0.3s;
-    }
-
-    .btn-signin:hover {
-        background: #f7ca00;
-    }
-
-    /* LINKS */
-    .small-link {
-        font-size: 13px;
-        color: #0066c0;
-        text-decoration: none;
-    }
-
-    .small-link:hover {
-        text-decoration: underline;
-        color: #c45500;
-    }
-
-    /* ERROR */
-    .error-box {
-        background: #ffe5e5;
-        color: #d60000;
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        text-align: center;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    /* HELP */
-    .help-text {
-        font-size: 12px;
-        color: #555;
-        margin-top: 15px;
-        line-height: 1.5;
-    }
-
-    /* CREATE ACCOUNT */
-    .create-box {
-        width: 100%;
-        max-width: 360px;
-        margin: 20px auto 0;
-        text-align: center;
-    }
-
-    .create-box p {
-        font-size: 13px;
-        color: #555;
-    }
-
-    .create-btn {
-        width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #adb1b8;
-        background: #f0f2f2;
-        font-size: 13px;
-        text-decoration: none;
-        color: #111;
-        display: inline-block;
-        transition: 0.3s;
-    }
-
-    .create-btn:hover {
-        background: #e7e9ec;
-    }
-
-    /* FOOTER */
-    .footer {
-        text-align: center;
-        font-size: 11px;
-        color: #555;
-        padding: 20px;
-        border-top: 1px solid #ddd;
-    }
-
-    /* MOBILE */
-    @media (max-width: 500px) {
-
-        .login-box {
-            border: none;
-            box-shadow: none;
-            padding: 10px;
+        *{
+            box-sizing:border-box;
         }
 
-        .login-wrapper {
-            padding-top: 20px;
+        body{
+            margin:0;
+            min-height:100vh;
+            font-family:'Segoe UI', Arial, sans-serif;
+            background:linear-gradient(135deg, #0f2e0b, #164110, #f7f3e8);
+            display:flex;
+            flex-direction:column;
         }
-    }
 
+        .login-wrapper{
+            flex:1;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:30px 15px;
+        }
+
+        .auth-card{
+            width:100%;
+            max-width:900px;
+            min-height:560px;
+            background:#fff;
+            border-radius:30px;
+            overflow:hidden;
+            box-shadow:0 30px 90px rgba(0,0,0,.25);
+            display:grid;
+            grid-template-columns:1fr 1fr;
+        }
+
+        .auth-left{
+            background:
+                linear-gradient(rgba(22,65,16,.90), rgba(22,65,16,.94)),
+                url("{% static 'images/Gafoulog.png' %}") center/280px no-repeat;
+            color:white;
+            padding:45px 35px;
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+        }
+
+        .brand-logo{
+            width:110px;
+            height:110px;
+            object-fit:contain;
+            background:white;
+            border-radius:28px;
+            padding:12px;
+            box-shadow:0 15px 35px rgba(0,0,0,.25);
+        }
+
+        .auth-left h1{
+            font-size:34px;
+            font-weight:900;
+            margin-top:30px;
+        }
+
+        .auth-left p{
+            color:#dcefd7;
+            font-size:15px;
+            line-height:1.7;
+        }
+
+        .feature{
+            display:flex;
+            gap:12px;
+            align-items:center;
+            margin-top:16px;
+            font-size:14px;
+        }
+
+        .feature i{
+            width:34px;
+            height:34px;
+            border-radius:12px;
+            background:rgba(255,255,255,.15);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:18px;
+        }
+
+        .auth-right{
+            padding:45px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+        }
+
+        .mobile-logo{
+            display:none;
+            width:90px;
+            height:90px;
+            object-fit:contain;
+            margin:0 auto 15px;
+            background:#fff;
+            border-radius:22px;
+            padding:10px;
+            box-shadow:0 12px 30px rgba(22,65,16,.18);
+        }
+
+        .auth-title{
+            font-size:30px;
+            font-weight:900;
+            color:#164110;
+            margin-bottom:6px;
+        }
+
+        .auth-subtitle{
+            color:#6b7280;
+            margin-bottom:25px;
+            font-size:14px;
+        }
+
+        .input-group-custom{
+            position:relative;
+            margin-bottom:16px;
+        }
+
+        .input-group-custom i{
+            position:absolute;
+            left:16px;
+            top:50%;
+            transform:translateY(-50%);
+            color:#164110;
+            font-size:18px;
+            z-index:2;
+        }
+
+        .form-control{
+            width:100%;
+            border:none;
+            background:#f3f7f0;
+            border-radius:16px;
+            padding:14px 15px 14px 48px;
+            font-size:14px;
+            color:#111827;
+            outline:none;
+        }
+
+        .form-control:focus{
+            background:#fff;
+            box-shadow:0 0 0 3px rgba(22,65,16,.15);
+        }
+
+        .btn-signin{
+            width:100%;
+            border:none;
+            border-radius:18px;
+            padding:14px;
+            background:linear-gradient(135deg, #164110, #2f7d32);
+            color:white;
+            font-weight:800;
+            font-size:15px;
+            margin-top:5px;
+            box-shadow:0 15px 30px rgba(22,65,16,.28);
+            transition:.3s;
+        }
+
+        .btn-signin:hover{
+            transform:translateY(-2px);
+            background:linear-gradient(135deg, #0f2e0b, #256b28);
+        }
+
+        .error-box{
+            background:#fee2e2;
+            color:#b91c1c;
+            padding:12px;
+            border-radius:15px;
+            margin-bottom:16px;
+            text-align:center;
+            font-size:14px;
+            font-weight:700;
+        }
+
+        .small-link{
+            color:#164110;
+            font-weight:700;
+            font-size:14px;
+            text-decoration:none;
+        }
+
+        .small-link:hover{
+            text-decoration:underline;
+        }
+
+        .help-text{
+            font-size:12px;
+            color:#6b7280;
+            margin-top:18px;
+            line-height:1.6;
+            text-align:center;
+        }
+
+        .create-box{
+            margin-top:24px;
+            padding-top:20px;
+            border-top:1px solid #e5e7eb;
+            text-align:center;
+        }
+
+        .create-box p{
+            font-size:13px;
+            color:#6b7280;
+            margin-bottom:10px;
+        }
+
+        .create-btn{
+            width:100%;
+            display:inline-block;
+            padding:13px;
+            border-radius:16px;
+            border:1px solid #164110;
+            color:#164110;
+            background:white;
+            font-size:14px;
+            font-weight:800;
+            text-decoration:none;
+            transition:.3s;
+        }
+
+        .create-btn:hover{
+            background:#f3f7f0;
+            color:#164110;
+        }
+
+        .footer{
+            background:#0f172a;
+            color:#94a3b8;
+            text-align:center;
+            font-size:12px;
+            padding:16px;
+        }
+
+        @media(max-width:850px){
+            .auth-card{
+                display:flex;
+                flex-direction:column;
+                max-width:480px;
+                min-height:auto;
+            }
+
+            .auth-left{
+                display:flex;
+                padding:28px 22px;
+                text-align:center;
+            }
+
+            .auth-left h1{
+                font-size:24px;
+                margin-top:18px;
+            }
+
+            .auth-left p{
+                font-size:14px;
+            }
+
+            .feature{
+                justify-content:center;
+            }
+
+            .brand-logo{
+                margin:auto;
+                width:90px;
+                height:90px;
+            }
+
+            .auth-right{
+                padding:30px 22px;
+            }
+
+            .auth-title,
+            .auth-subtitle{
+                text-align:center;
+            }
+
+            .auth-title{
+                font-size:25px;
+            }
+        }
     </style>
-
 </head>
 
 <body>
 
 <div class="login-wrapper">
 
-    <div>
+    <div class="auth-card">
 
-        <!-- LOGO -->
-        <img src="{% static 'images/Gafoulog.png' %}" class="logo" alt="GafouShop Logo">
+        <div class="auth-left">
 
-        <!-- LOGIN BOX -->
-        <div class="login-box">
+            <div>
+                <img src="https://res.cloudinary.com/dutww5tsg/image/upload/Gafoulog_clxh5l.png"
+                     class="brand-logo"
+                     alt="GafouShop Logo">
 
-            <h1>Se connecter</h1>
+                <h1>Bon retour</h1>
 
-            <!-- ERROR MESSAGE -->
+                <p>
+                    Connectez-vous à votre compte pour suivre vos commandes et continuer vos achats.
+                </p>
+
+                <div class="feature">
+                    <i class="bi bi-bag-check"></i>
+                    <span>Accès rapide à vos commandes</span>
+                </div>
+
+                <div class="feature">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Connexion sécurisée</span>
+                </div>
+
+                <div class="feature">
+                    <i class="bi bi-heart"></i>
+                    <span>Vos produits préférés au même endroit</span>
+                </div>
+            </div>
+
+            <div>
+                <small>© 2026 GafouShop</small>
+            </div>
+
+        </div>
+
+        <div class="auth-right">
+
+            <h2 class="auth-title">Se connecter</h2>
+            <p class="auth-subtitle">Entrez vos informations pour accéder à votre compte</p>
+
             {% if error %}
                 <div class="error-box">
                     {{ error }}
                 </div>
             {% endif %}
 
-            <!-- DJANGO MESSAGES -->
             {% if messages %}
                 {% for message in messages %}
                     <div class="error-box">
@@ -211,33 +357,23 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- FORM -->
             <form method="POST">
-
                 {% csrf_token %}
 
-                <label>Email ou nom d'utilisateur</label>
+                <div class="input-group-custom">
+                    <i class="bi bi-person"></i>
+                    <input class="form-control" type="text" name="username" placeholder="Email ou nom d'utilisateur" required>
+                </div>
 
-                <input
-                    class="form-control mb-3"
-                    type="text"
-                    name="username"
-                    required
-                >
-
-                <label>Mot de passe</label>
-
-                <input
-                    class="form-control mb-3"
-                    type="password"
-                    name="password"
-                    required
-                >
+                <div class="input-group-custom">
+                    <i class="bi bi-lock"></i>
+                    <input class="form-control" type="password" name="password" placeholder="Mot de passe" required>
+                </div>
 
                 <button type="submit" class="btn-signin">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>
                     Se connecter
                 </button>
-
             </form>
 
             <div class="text-center mt-3">
@@ -250,16 +386,14 @@
                 En continuant, vous acceptez les conditions et politiques de GafouShop.
             </p>
 
-        </div>
+            <div class="create-box">
+                <p>Nouveau client ?</p>
 
-        <!-- CREATE ACCOUNT -->
-        <div class="create-box">
-
-            <p>Nouveau client ?</p>
-
-            <a href="{% url 'register' %}" class="create-btn">
-                Créer votre compte GafouShop
-            </a>
+                <a href="{% url 'register' %}" class="create-btn">
+                    <i class="bi bi-person-plus me-1"></i>
+                    Créer votre compte GafouShop
+                </a>
+            </div>
 
         </div>
 
@@ -267,7 +401,6 @@
 
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
     © 2026 GafouShop - Tous droits réservés
 </div>

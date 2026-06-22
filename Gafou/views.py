@@ -1612,6 +1612,7 @@ def edit_hygiene(request, id):
     return render(request, "edit_hygiene.html", {
         "hygiene": hygiene
 
+
     })
 
 from django.http import HttpResponse
@@ -2205,7 +2206,9 @@ def hygiene_detail(request, id):
 
     return render(request, 'product_detail.html', {
         'product': produit
+
     })
+
 
 
 
@@ -2246,3 +2249,11 @@ def beaute_detail(request, id):
             'product': produit
         }
     )
+
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+def logout_user(request):
+    logout(request)
+    return redirect("home")
+
